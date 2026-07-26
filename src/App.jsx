@@ -891,29 +891,29 @@ export default function App() {
               {/* Form 3: Manage Existing Resources */}
               <div className="admin-card" style={{ gridColumn: "1 / -1" }}>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <HistoryIcon style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-purple)" }} /> Manage Uploaded Files & Courses
+                  <HistoryIcon style={{ width: "1.25rem", height: "1.25rem", color: "var(--neon-purple)" }} /> MANAGE UPLOADED FILES & COURSES
                 </h3>
                 <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
                   {courses.map(course => (
-                    <div key={course.code} style={{ border: "1px solid var(--border-light)", borderRadius: "var(--border-radius-sm)", padding: "1rem", backgroundColor: "#faf9f6" }}>
+                    <div key={course.code} style={{ border: "1px solid var(--neon-purple)", padding: "1rem", backgroundColor: "rgba(9, 24, 51, 0.5)", boxShadow: "inset 0 0 10px rgba(113, 28, 145, 0.2)" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                        <h4 style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{course.code}</h4>
+                        <h4 style={{ fontWeight: "bold", fontSize: "1rem", color: "var(--neon-cyan)", fontFamily: "var(--font-mono)" }}>{course.code}</h4>
                         <button 
                           onClick={() => handleRemoveCourse(course.code)}
-                          style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}
+                          style={{ color: "var(--neon-pink)", background: "none", border: "none", cursor: "pointer" }}
                         >
-                          <Trash2 style={{ width: "1rem", height: "1rem" }} />
+                          <Trash2 style={{ width: "1.2rem", height: "1.2rem" }} />
                         </button>
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                         {course.parts.map(part => (
-                          <div key={part} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.8rem", backgroundColor: "white", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border-light)" }}>
-                            <span>{part} {course.uploadedFiles && course.uploadedFiles[part] ? "📄" : ""}</span>
+                          <div key={part} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", backgroundColor: "rgba(19, 62, 124, 0.4)", padding: "0.5rem", border: "1px solid var(--neon-cyan)", color: "var(--text-light)" }}>
+                            <span style={{ fontFamily: "var(--font-mono)" }}>{part} {course.uploadedFiles && course.uploadedFiles[part] ? "💾" : ""}</span>
                             <button 
                               onClick={() => handleRemoveResource(course.code, part)}
-                              style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}
+                              style={{ color: "var(--neon-pink)", background: "none", border: "none", cursor: "pointer" }}
                             >
-                              <Trash2 style={{ width: "0.8rem", height: "0.8rem" }} />
+                              <Trash2 style={{ width: "1rem", height: "1rem" }} />
                             </button>
                           </div>
                         ))}
