@@ -13,7 +13,8 @@ import {
   LogOut,
   ExternalLink,
   Layers,
-  ChevronRight
+  ChevronRight,
+  Upload
 } from "lucide-react";
 import { initialCourses } from "./data";
 
@@ -236,6 +237,28 @@ export default function App() {
       return course;
     }));
     setSysMessage(`Purged "${partName}" from ${courseCode}.`);
+  };
+
+  const handleReplaceResourceFile = (courseCode, partName, file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target.result;
+      setCourses(courses.map((course) => {
+        if (course.code === courseCode) {
+          const updatedCourse = { ...course };
+          if (!updatedCourse.uploadedFiles) updatedCourse.uploadedFiles = {};
+          updatedCourse.uploadedFiles[partName] = {
+            name: file.name,
+            data: base64
+          };
+          return updatedCourse;
+        }
+        return course;
+      }));
+      setSysMessage(`Replaced file for "${partName}" in ${courseCode}.`);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleRemoveCourse = (courseCode) => {
@@ -909,12 +932,23 @@ export default function App() {
                         {course.parts.map(part => (
                           <div key={part} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", backgroundColor: "rgba(19, 62, 124, 0.4)", padding: "0.5rem", border: "1px solid var(--neon-cyan)", color: "var(--text-light)" }}>
                             <span style={{ fontFamily: "var(--font-mono)" }}>{part} {course.uploadedFiles && course.uploadedFiles[part] ? "💾" : ""}</span>
-                            <button 
-                              onClick={() => handleRemoveResource(course.code, part)}
-                              style={{ color: "var(--neon-pink)", background: "none", border: "none", cursor: "pointer" }}
-                            >
-                              <Trash2 style={{ width: "1rem", height: "1rem" }} />
-                            </button>
+                            <div style={{ display: "flex", gap: "0.5rem" }}>
+                              <label style={{ cursor: "pointer", color: "var(--neon-cyan)", display: "flex", alignItems: "center" }}>
+                                <Upload style={{ width: "1rem", height: "1rem" }} />
+                                <input 
+                                  type="file" 
+                                  accept="application/pdf"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleReplaceResourceFile(course.code, part, e.target.files[0])}
+                                />
+                              </label>
+                              <button 
+                                onClick={() => handleRemoveResource(course.code, part)}
+                                style={{ color: "var(--neon-pink)", background: "none", border: "none", cursor: "pointer" }}
+                              >
+                                <Trash2 style={{ width: "1rem", height: "1rem" }} />
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
