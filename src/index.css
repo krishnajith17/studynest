@@ -427,12 +427,18 @@ h1, h2, h3, h4 {
 .book-cover-code {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   text-align: center;
   text-transform: uppercase;
   margin-top: auto;
   margin-bottom: auto;
   letter-spacing: -0.02em;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .book-cover-sem {
@@ -839,4 +845,55 @@ h1, h2, h3, h4 {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Attractive Tab UI */
+.tab-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+  padding: 0.5rem 1rem;
+}
+
+.tab-btn.is--active {
+  color: var(--color-orange);
+  border-bottom: 2px solid var(--color-orange);
+}
+
+.attractive-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: white;
+  border: 2px solid var(--border-dark);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  box-shadow: var(--shadow-flat-btn);
+  color: var(--text-dark);
+}
+
+.attractive-tab:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #151b26;
+}
+
+.attractive-tab.is--active {
+  background-color: var(--color-yellow);
+  color: var(--text-dark);
+  border-bottom: 2px solid var(--border-dark);
+}
+
+.tab-badge {
+  background-color: var(--color-orange);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50px;
+  border: 2px solid var(--border-dark);
+  font-weight: 900;
 }

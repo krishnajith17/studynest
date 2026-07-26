@@ -115,7 +115,7 @@ export default function App() {
 
   const handleAdminLogin = (e) => {
     e.preventDefault();
-    if (adminPassword === "chirp") {
+    if (adminPassword === "STUDY") {
       setIsAdmin(true);
       setShowAdminLogin(false);
       setAdminPassword("");
@@ -123,7 +123,7 @@ export default function App() {
       setOwlQuote("Admin verified! Welcome to the book binder dashboard.");
       setActiveTab("admin");
     } else {
-      setAdminError("Wrong passcode! Hint: What does a baby bird say?");
+      setAdminError("Wrong passcode! Hint: Capital letters...");
     }
   };
 
@@ -201,7 +201,10 @@ export default function App() {
 
     setCourses(courses.map((course) => {
       if (course.code === selectedCourseCode) {
-        const updatedParts = [...course.parts, newResourcePartName];
+        const updatedParts = [...course.parts];
+        if (!updatedParts.includes(newResourcePartName)) {
+          updatedParts.push(newResourcePartName);
+        }
         const updatedCourse = { ...course, parts: updatedParts };
         
         if (uploadedFileBase64) {
@@ -220,6 +223,26 @@ export default function App() {
     setUploadedFileName("");
     setUploadedFileBase64("");
     setOwlQuote(`Inserted exam notes "${newResourcePartName}" into ${selectedCourseCode}!`);
+  };
+
+  const handleRemoveResource = (courseCode, partName) => {
+    setCourses(courses.map((course) => {
+      if (course.code === courseCode) {
+        const updatedParts = course.parts.filter(p => p !== partName);
+        const updatedCourse = { ...course, parts: updatedParts };
+        if (updatedCourse.uploadedFiles && updatedCourse.uploadedFiles[partName]) {
+          delete updatedCourse.uploadedFiles[partName];
+        }
+        return updatedCourse;
+      }
+      return course;
+    }));
+    setOwlQuote(`Removed "${partName}" from ${courseCode}.`);
+  };
+
+  const handleRemoveCourse = (courseCode) => {
+    setCourses(courses.filter(c => c.code !== courseCode));
+    setOwlQuote(`Course ${courseCode} removed.`);
   };
 
   const triggerDownload = (courseCode, partName) => {
@@ -366,12 +389,6 @@ export default function App() {
               Join the book club that's anything but traditional. Pick your courses, unbox reference books, and hatch premium PDF study materials straight to your local nest.
             </p>
             <div className="hero-actions">
-              <button 
-                onClick={() => setActiveTab("search")}
-                className="btn-aardvark is--yellow"
-              >
-                Start Unboxing <ChevronRight className="w-5 h-5" />
-              </button>
               <div className="handwritten">Syllabus scanned & sorted by hand 🦉</div>
             </div>
           </div>
@@ -395,15 +412,16 @@ export default function App() {
           <div className="navbar-tabs">
             <button 
               onClick={() => setActiveTab("search")}
-              className={`tab-btn ${activeTab === "search" ? "is--active" : ""}`}
+              className={`tab-btn attractive-tab ${activeTab === "search" ? "is--active" : ""}`}
             >
-              All Books
+              📚 <span className="tab-text">ALL BOOKS</span>
             </button>
             <button 
               onClick={() => setActiveTab("history")}
-              className={`tab-btn ${activeTab === "history" ? "is--active" : ""}`}
+              className={`tab-btn attractive-tab ${activeTab === "history" ? "is--active" : ""}`}
             >
-              Hatched Box ({history.length})
+              🐣 <span className="tab-text">HATCHED BOX</span>
+              {history.length > 0 && <span className="tab-badge">{history.length}</span>}
             </button>
             <button 
               onClick={() => {
@@ -879,6 +897,41 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Form 3: Manage Existing Resources */}
+              <div className="admin-card" style={{ gridColumn: "1 / -1" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <HistoryIcon style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-purple)" }} /> Manage Uploaded Files & Courses
+                </h3>
+                <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
+                  {courses.map(course => (
+                    <div key={course.code} style={{ border: "1px solid var(--border-light)", borderRadius: "var(--border-radius-sm)", padding: "1rem", backgroundColor: "#faf9f6" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                        <h4 style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{course.code}</h4>
+                        <button 
+                          onClick={() => handleRemoveCourse(course.code)}
+                          style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}
+                        >
+                          <Trash2 style={{ width: "1rem", height: "1rem" }} />
+                        </button>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        {course.parts.map(part => (
+                          <div key={part} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.8rem", backgroundColor: "white", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border-light)" }}>
+                            <span>{part} {course.uploadedFiles && course.uploadedFiles[part] ? "📄" : ""}</span>
+                            <button 
+                              onClick={() => handleRemoveResource(course.code, part)}
+                              style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}
+                            >
+                              <Trash2 style={{ width: "0.8rem", height: "0.8rem" }} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -997,7 +1050,7 @@ export default function App() {
           }}
           className="footer-admin-link"
         >
-          🔐 Admin Entrance (Password: chirp)
+          🔐 Admin Entrance
         </p>
       </footer>
       
