@@ -18,11 +18,9 @@ import {
 import { initialCourses } from "./data";
 
 const CARD_THEMES = [
-  { bg: "var(--color-purple)", border: "#b5a8e0", ears: "#9e8fe3" },
-  { bg: "var(--color-orange)", border: "#ff5a36", ears: "#e54724" },
-  { bg: "var(--color-green)", border: "#37f3c1", ears: "#1fe0ae" },
-  { bg: "var(--color-blue)", border: "#00ecef", ears: "#00cfd2" },
-  { bg: "var(--color-yellow)", border: "#fff200", ears: "#e6da00" }
+  { bg: "rgba(10, 189, 198, 0.1)", border: "var(--neon-cyan)" },
+  { bg: "rgba(234, 0, 217, 0.1)", border: "var(--neon-pink)" },
+  { bg: "rgba(113, 28, 145, 0.1)", border: "var(--neon-purple)" }
 ];
 
 export default function App() {
@@ -43,7 +41,7 @@ export default function App() {
   
   const [hatchingState, setHatchingState] = useState({
     active: false,
-    stage: "egg",
+    stage: "locked",
     courseCode: "",
     partName: ""
   });
@@ -75,16 +73,16 @@ export default function App() {
   const [tempRef, setTempRef] = useState({ title: "", author: "", publisher: "", year: "", link: "" });
   const [tempPart, setTempPart] = useState("");
 
-  const [owlQuote, setOwlQuote] = useState("Unbox study guides worth talking about! Grab a book-card below.");
+  const [sysMessage, setSysMessage] = useState("Accessing data shards. Select a module to begin decryption.");
   
-  const funnyQuotes = [
-    "Warning: Cramming the night before might cause temporary feather loss.",
+  const cyberQuotes = [
+    "Warning: Overclocking your brain might cause temporary memory leaks.",
     "Exams are like bird nests: built twig by twig (or slide by slide).",
-    "Don't count your chickens before they pass their exams!",
-    "Your brain is a nest. Fill it with knowledge, not just dust.",
-    "Be like the owl: wise, awake at night, and screaming internally.",
-    "Study hard! If you fail, the birds will mock you from the trees.",
-    "A download a day keeps the failing grade away! Or at least makes you feel productive.",
+    "Don't let your neural net crash during the exam.",
+    "Your brain is a drive. Fill it with knowledge, not bloatware.",
+    "Netrunners never sleep, they just recharge.",
+    "Bypass the firewall. Download the syllabus.",
+    "A download a day keeps the system failure away.",
   ];
 
   useEffect(() => {
@@ -95,9 +93,9 @@ export default function App() {
     localStorage.setItem("studynest_history", JSON.stringify(history));
   }, [history]);
 
-  const changeOwlQuote = () => {
-    const randomIndex = Math.floor(Math.random() * funnyQuotes.length);
-    setOwlQuote(funnyQuotes[randomIndex]);
+  const changeSysMessage = () => {
+    const randomIndex = Math.floor(Math.random() * cyberQuotes.length);
+    setSysMessage(cyberQuotes[randomIndex]);
   };
 
   const filteredCourses = courses.filter((course) => {
@@ -120,10 +118,10 @@ export default function App() {
       setShowAdminLogin(false);
       setAdminPassword("");
       setAdminError("");
-      setOwlQuote("Admin verified! Welcome to the book binder dashboard.");
+      setSysMessage("ROOT ACCESS GRANTED. Welcome to the mainframe.");
       setActiveTab("admin");
     } else {
-      setAdminError("Wrong passcode! Hint: Capital letters...");
+      setAdminError("Wrong passcode! Hint: STUDY");
     }
   };
 
@@ -151,7 +149,7 @@ export default function App() {
       references: [],
       parts: []
     });
-    setOwlQuote(`Successfully bound new course book: ${createdCourse.title}!`);
+    setSysMessage(`Successfully compiled new data matrix: ${createdCourse.title}!`);
   };
 
   const addTextbookToNewCourse = () => {
@@ -222,7 +220,7 @@ export default function App() {
     setNewResourcePartName("");
     setUploadedFileName("");
     setUploadedFileBase64("");
-    setOwlQuote(`Inserted exam notes "${newResourcePartName}" into ${selectedCourseCode}!`);
+    setSysMessage(`Uploaded data shard "${newResourcePartName}" into ${selectedCourseCode}!`);
   };
 
   const handleRemoveResource = (courseCode, partName) => {
@@ -237,12 +235,12 @@ export default function App() {
       }
       return course;
     }));
-    setOwlQuote(`Removed "${partName}" from ${courseCode}.`);
+    setSysMessage(`Purged "${partName}" from ${courseCode}.`);
   };
 
   const handleRemoveCourse = (courseCode) => {
     setCourses(courses.filter(c => c.code !== courseCode));
-    setOwlQuote(`Course ${courseCode} removed.`);
+    setSysMessage(`Course ${courseCode} removed.`);
   };
 
   const triggerDownload = (courseCode, partName) => {
@@ -250,27 +248,27 @@ export default function App() {
     
     setHatchingState({
       active: true,
-      stage: "egg",
+      stage: "locked",
       courseCode,
       partName
     });
 
     setTimeout(() => {
-      setHatchingState(prev => ({ ...prev, stage: "shaking" }));
+      setHatchingState(prev => ({ ...prev, stage: "decrypting" }));
     }, 400);
 
     setTimeout(() => {
-      setHatchingState(prev => ({ ...prev, stage: "cracked" }));
+      setHatchingState(prev => ({ ...prev, stage: "downloading" }));
     }, 1500);
 
     setTimeout(() => {
-      setHatchingState(prev => ({ ...prev, stage: "hatched" }));
+      setHatchingState(prev => ({ ...prev, stage: "unlocked" }));
       generateAndSavePDF(course, partName);
     }, 2500);
 
     setTimeout(() => {
-      setHatchingState({ active: false, stage: "egg", courseCode: "", partName: "" });
-      setOwlQuote(`A wise study-bird flew away with your PDF: ${partName}!`);
+      setHatchingState({ active: false, stage: "locked", courseCode: "", partName: "" });
+      setSysMessage(`Data decrypted. Shard downloaded successfully: ${partName}!`);
     }, 4500);
   };
 
@@ -290,7 +288,7 @@ export default function App() {
       doc.setTextColor(255, 255, 255);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(26);
-      doc.text("StudyNest", 15, 26);
+      doc.text("CyberNest", 15, 26);
       
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
@@ -304,7 +302,7 @@ export default function App() {
 
       doc.setFont("helvetica", "italic");
       doc.setFontSize(11);
-      doc.text(`Incubated Resource: ${partName}`, 15, 68);
+      doc.text(`Extracted Data Node: ${partName}`, 15, 68);
       doc.line(15, 73, 195, 73);
 
       doc.setFont("helvetica", "bold");
@@ -351,7 +349,7 @@ export default function App() {
       doc.setFont("helvetica", "italic");
       doc.setFontSize(8);
       doc.setTextColor(21, 27, 38);
-      doc.text("Designed with cozy style by StudyNest Aardvark. Happy Cramming!", 60, 293);
+      doc.text("Designed with cozy style by CyberNest Netrunners. Happy Cramming!", 60, 293);
 
       doc.save(`${course.code}_${partName.replace(/\s+/g, "_")}.pdf`);
     }
@@ -368,7 +366,7 @@ export default function App() {
 
   const clearHistory = () => {
     setHistory([]);
-    setOwlQuote("Your catalog of study-chicks was cleared!");
+    setSysMessage("Data log purged successfully.");
   };
 
   return (
@@ -379,24 +377,24 @@ export default function App() {
         <div className="hero-inner">
           <div className="hero-content">
             <div className="hero-tag">
-              <span>🪺</span>
-              <span>Incubator Hub</span>
+              <span>⚡</span>
+              <span>NETRUNNER HUB</span>
             </div>
             <h1 className="hero-title">
-              Unbox study guides worth talking about.
+              DECRYPT EXAM SHARDS.
             </h1>
             <p className="hero-desc">
-              Join the book club that's anything but traditional. Pick your courses, unbox reference books, and hatch premium PDF study materials straight to your local nest.
+              Access the underground network. Decrypt study notes, bypass the firewalls, and download premium PDF data shards straight to your local drive.
             </p>
             <div className="hero-actions">
-              <div className="handwritten">Syllabus scanned & sorted by hand 🦉</div>
+              <div className="handwritten">DATA SCANNED & SORTED BY NETRUNNERS 🤖</div>
             </div>
           </div>
 
           {/* Large Owl Mascot */}
           <div className="hero-visual">
-            <span style={{ fontSize: "6rem" }}>🦉</span>
-            <div className="hero-visual-badge">Nest Guard</div>
+            <span style={{ fontSize: "6rem" }}>🤖</span>
+            <div className="hero-visual-badge">SYSTEM ADMIN</div>
           </div>
         </div>
       </section>
@@ -405,8 +403,8 @@ export default function App() {
       <nav className="navbar">
         <div className="navbar-inner">
           <div className="navbar-logo">
-            <span>🪹</span>
-            <span>StudyNest</span>
+            <span>⚡</span>
+            <span>CyberNest</span>
           </div>
 
           <div className="navbar-tabs">
@@ -414,13 +412,13 @@ export default function App() {
               onClick={() => setActiveTab("search")}
               className={`tab-btn attractive-tab ${activeTab === "search" ? "is--active" : ""}`}
             >
-              📚 <span className="tab-text">ALL BOOKS</span>
+              🌐 <span className="tab-text">DATA CATALOG</span>
             </button>
             <button 
               onClick={() => setActiveTab("history")}
               className={`tab-btn attractive-tab ${activeTab === "history" ? "is--active" : ""}`}
             >
-              🐣 <span className="tab-text">HATCHED BOX</span>
+              💾 <span className="tab-text">DECRYPTED SHARDS</span>
               {history.length > 0 && <span className="tab-badge">{history.length}</span>}
             </button>
             <button 
@@ -433,7 +431,7 @@ export default function App() {
               }}
               className={`tab-btn ${activeTab === "admin" ? "is--active" : ""}`}
             >
-              Incubator Admin
+              ROOT ACCESS
             </button>
           </div>
         </div>
@@ -441,9 +439,9 @@ export default function App() {
 
       {/* Wisdom Bubble */}
       <div className="wisdom-container">
-        <div onClick={changeOwlQuote} className="wisdom-bubble">
-          <span style={{ fontSize: "1.5rem" }}>💡</span>
-          <p style={{ fontSize: "0.85rem", fontStyle: "italic", margin: 0 }}>"{owlQuote}"</p>
+        <div onClick={changeSysMessage} className="wisdom-bubble">
+          <span style={{ fontSize: "1.5rem" }}>💬</span>
+          <p style={{ fontSize: "0.85rem", fontStyle: "italic", margin: 0 }}>"{sysMessage}"</p>
         </div>
       </div>
 
@@ -493,7 +491,7 @@ export default function App() {
             {/* Courses list */}
             {filteredCourses.length === 0 ? (
               <div className="text-center py-20 bg-white border-2 border-[#151b26] rounded-3xl p-8 shadow-flat" style={{ textAlign: "center", padding: "4rem 2rem" }}>
-                <span style={{ fontSize: "3rem", display: "block", marginBottom: "1rem" }}>🍂</span>
+                <span style={{ fontSize: "3rem", display: "block", marginBottom: "1rem" }}>⚠️</span>
                 <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.5rem" }}>No nests found!</h3>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "350px", margin: "0 auto" }}>No study guides match your queries. Try resetting filters or incubate a new one in the admin section!</p>
               </div>
@@ -504,24 +502,17 @@ export default function App() {
                   return (
                     <div key={course.code} className="course-card">
                       {/* Styled Aardvark Ears (Nest Wings) */}
-                      <div className="nest-wings" style={{ color: theme.ears }}>
-                        <svg className="nest-wing" fill="currentColor" viewBox="0 0 44 45">
-                          <path d="M1.335.198c.671-.316 1.5-.254 2.186.187C27.678 16.847 39.839 36.953 44 45h-6.048c-2.382-1.604-6.964-3.674-15.652-4.814C2.999 37.666-.665 14.174.09 2.04.152 1.28.589.515 1.335.198Z" />
-                        </svg>
-                        <svg className="nest-wing" fill="currentColor" viewBox="0 0 29 80">
-                          <path d="M19.388.879c.667-.771 1.647-1.018 2.559-.807.912.21 1.682.956 1.926 1.861C34.595 38.09 25.79 69.237 21.823 80h-4.188c-.17-4.22-2.739-13.318-10.975-22.064-8.493-9.099-8.88-21.913-1.063-37.23C11.221 9.603 19.091 1.266 19.388.879Z" />
-                        </svg>
-                      </div>
+                      
 
                       {/* Spine Cover book cover */}
                       <div className="book-container">
-                        <div className="book-cover" style={{ backgroundColor: theme.bg }}>
+                        <div className="book-cover" style={{ backgroundColor: theme.bg, borderColor: theme.border }}>
                           <div className="book-spine"></div>
                           <div className="book-cover-content">
-                            <div className="book-cover-cat">
+                            <div className="book-cover-cat" style={{ color: theme.border }}>
                               {course.category}
                             </div>
-                            <div className="book-cover-code">
+                            <div className="book-cover-code" style={{ textShadow: `0 0 8px ${theme.border}`, color: theme.border }}>
                               {course.code}
                             </div>
                             <div className="book-cover-sem">
@@ -620,25 +611,25 @@ export default function App() {
             <div className="history-panel">
               <div className="history-header">
                 <div className="history-header-left">
-                  <span style={{ fontSize: "1.75rem" }}>🪺</span>
+                  <span style={{ fontSize: "1.75rem" }}>⚡</span>
                   <div>
                     <h3 style={{ fontSize: "1.1rem", fontWeight: "bold" }}>Your Study Nest Box</h3>
-                    <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontFamily: "monospace" }}>Track downloaded exam eggs</p>
+                    <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontFamily: "monospace" }}>Track decrypted data shards</p>
                   </div>
                 </div>
                 
                 {history.length > 0 && (
                   <button onClick={clearHistory} className="history-clear-btn">
-                    Clear Box
+                    Clear Log
                   </button>
                 )}
               </div>
 
               {history.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "3rem 1rem", color: "var(--text-muted)" }}>
-                  <span style={{ fontSize: "3rem", display: "block", marginBottom: "0.75rem" }}>🐣</span>
-                  <p style={{ fontWeight: "bold", color: "var(--text-dark)", marginBottom: "0.25rem" }}>No eggs hatched yet!</p>
-                  <p style={{ fontSize: "0.75rem" }}>Unbox resources on the main page to hatch study guides.</p>
+                  <span style={{ fontSize: "3rem", display: "block", marginBottom: "0.75rem" }}>💾</span>
+                  <p style={{ fontWeight: "bold", color: "var(--text-dark)", marginBottom: "0.25rem" }}>No shards decrypted yet!</p>
+                  <p style={{ fontSize: "0.75rem" }}>Decrypt resources on the main page to download data shards.</p>
                 </div>
               ) : (
                 <div className="history-list">
@@ -646,7 +637,7 @@ export default function App() {
                     <div key={item.id} className="history-item">
                       <div className="history-item-left">
                         <div className="history-item-icon">
-                          🐤
+                          🟢
                         </div>
                         <div>
                           <h4 style={{ fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-dark)" }}>{item.partName}</h4>
@@ -674,7 +665,7 @@ export default function App() {
                   <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "0.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <Plus style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-orange)" }} /> Bind New Course Book
                   </h3>
-                  <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Add a new book shell to the StudyNest catalogue.</p>
+                  <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Add a new book shell to the CyberNest catalogue.</p>
 
                   <form onSubmit={handleCreateCourse} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                     <div className="form-row-2">
@@ -943,9 +934,9 @@ export default function App() {
         <div className="modal-overlay">
           <div className="hatch-modal">
             <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-              <Key style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-yellow)" }} /> Entering Incubator
+              <Key style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-yellow)" }} /> SYSTEM OVERRIDE
             </h3>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Incubator access is locked. Enter the passcode to proceed.</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Root access is restricted. Enter the authorization key to proceed.</p>
 
             <form onSubmit={handleAdminLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <input 
@@ -977,7 +968,7 @@ export default function App() {
                   className="btn-aardvark is--yellow"
                   style={{ fontSize: "0.75rem", padding: "8px 20px" }}
                 >
-                  Confirm Chirp
+                  AUTHORIZE
                 </button>
               </div>
             </form>
@@ -989,44 +980,44 @@ export default function App() {
       {hatchingState.active && (
         <div className="modal-overlay">
           <div className="hatch-modal">
-            {hatchingState.stage === "egg" && (
+            {hatchingState.stage === "locked" && (
               <div style={{ marginBottom: "1.5rem" }}>
                 <div style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  🥚
+                  🔒
                 </div>
                 <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontFamily: "monospace", marginTop: "1rem" }}>Exam egg found in nest...</p>
               </div>
             )}
 
-            {hatchingState.stage === "shaking" && (
+            {hatchingState.stage === "decrypting" && (
               <div style={{ marginBottom: "1.5rem" }}>
                 <div className="egg-shaking" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center" }}>
-                  🥚
+                  🔒
                 </div>
                 <p style={{ fontSize: "0.75rem", color: "var(--color-orange)", fontWeight: "bold", fontFamily: "monospace", marginTop: "1rem" }}>Incubating study notes...</p>
               </div>
             )}
 
-            {hatchingState.stage === "cracked" && (
+            {hatchingState.stage === "downloading" && (
               <div style={{ marginBottom: "1.5rem" }}>
                 <div className="egg-shaking" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center" }}>
-                  🐣
+                  💾
                 </div>
-                <p style={{ fontSize: "0.75rem", color: "var(--color-orange)", fontWeight: "bold", fontFamily: "monospace", marginTop: "1rem" }}>*Chirp Crack Chirp!*</p>
+                <p style={{ fontSize: "0.75rem", color: "var(--color-orange)", fontWeight: "bold", fontFamily: "monospace", marginTop: "1rem" }}>*Bypass Complete*</p>
               </div>
             )}
 
-            {hatchingState.stage === "hatched" && (
+            {hatchingState.stage === "unlocked" && (
               <div style={{ marginBottom: "1.5rem" }}>
                 <div className="floating" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center", color: "var(--color-green)" }}>
-                  🐤
+                  🟢
                 </div>
                 <p style={{ fontSize: "0.75rem", color: "var(--color-green)", fontWeight: "extrabold", fontFamily: "monospace", marginTop: "1rem" }}>Resource Hatched! Check Downloads.</p>
               </div>
             )}
 
             <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "var(--text-dark)", marginBottom: "0.25rem" }}>
-              {hatchingState.stage === "hatched" ? "Study Bird Flying!" : "Hatching Resource"}
+              {hatchingState.stage === "unlocked" ? "Download Complete!" : "Decrypting Resource"}
             </h3>
             <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
               {hatchingState.partName} - {hatchingState.courseCode}
@@ -1038,7 +1029,7 @@ export default function App() {
       {/* Footer */}
       <footer className="footer-wrap">
         <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontFamily: "monospace" }}>
-          Made with Love by the StudyNest Team. All study notes incubated locally.
+          Made with Love by the CyberNest Team. All study notes incubated locally.
         </p>
         <p 
           onClick={() => {
