@@ -9,17 +9,14 @@ import {
   BookOpen, 
   AlertCircle, 
   Trash2, 
-  Award, 
   Key, 
   LogOut,
   ExternalLink,
   Layers,
-  ChevronRight,
-  HelpCircle
+  ChevronRight
 } from "lucide-react";
 import { initialCourses } from "./data";
 
-// Helper for assignable theme colors to courses
 const CARD_THEMES = [
   { bg: "var(--color-purple)", border: "#b5a8e0", ears: "#9e8fe3" },
   { bg: "var(--color-orange)", border: "#ff5a36", ears: "#e54724" },
@@ -44,21 +41,18 @@ export default function App() {
   const [selectedSemester, setSelectedSemester] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   
-  // Egg Hatching Animation State
   const [hatchingState, setHatchingState] = useState({
     active: false,
-    stage: "egg", // egg, shaking, cracked, hatched, done
+    stage: "egg",
     courseCode: "",
     partName: ""
   });
 
-  // Admin Panel State
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [adminError, setAdminError] = useState("");
 
-  // New Course Form State
   const [newCourse, setNewCourse] = useState({
     code: "",
     title: "",
@@ -72,18 +66,15 @@ export default function App() {
     parts: []
   });
 
-  // New Resource Form State
   const [selectedCourseCode, setSelectedCourseCode] = useState("");
   const [newResourcePartName, setNewResourcePartName] = useState("");
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [uploadedFileBase64, setUploadedFileBase64] = useState("");
 
-  // Temp reference input states
   const [tempTextbook, setTempTextbook] = useState({ title: "", author: "", publisher: "", year: "", link: "" });
   const [tempRef, setTempRef] = useState({ title: "", author: "", publisher: "", year: "", link: "" });
   const [tempPart, setTempPart] = useState("");
 
-  // Funny Quotes & Owl Guard state
   const [owlQuote, setOwlQuote] = useState("Unbox study guides worth talking about! Grab a book-card below.");
   
   const funnyQuotes = [
@@ -130,6 +121,7 @@ export default function App() {
       setAdminPassword("");
       setAdminError("");
       setOwlQuote("Admin verified! Welcome to the book binder dashboard.");
+      setActiveTab("admin");
     } else {
       setAdminError("Wrong passcode! Hint: What does a baby bird say?");
     }
@@ -269,8 +261,7 @@ export default function App() {
     } else {
       const doc = new jsPDF();
       
-      // Header theme: Cozy dark navy and amber
-      doc.setFillColor(21, 27, 38); // var(--bg-navy)
+      doc.setFillColor(21, 27, 38);
       doc.rect(0, 0, 210, 42, "F");
       
       doc.setTextColor(255, 255, 255);
@@ -280,10 +271,9 @@ export default function App() {
       
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.setTextColor(255, 242, 0); // Bold yellow
+      doc.setTextColor(255, 242, 0);
       doc.text("UNBOX STORIES WORTH STUDYING", 132, 25);
 
-      // Course Info
       doc.setTextColor(21, 27, 38);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
@@ -294,7 +284,6 @@ export default function App() {
       doc.text(`Incubated Resource: ${partName}`, 15, 68);
       doc.line(15, 73, 195, 73);
 
-      // Content section
       doc.setFont("helvetica", "bold");
       doc.setFontSize(13);
       doc.text("Syllabus & Course Scope", 15, 85);
@@ -304,7 +293,6 @@ export default function App() {
       const splitDesc = doc.splitTextToSize(course.description, 180);
       doc.text(splitDesc, 15, 93);
 
-      // Textbooks & References lists
       let yOffset = 118;
       doc.setFont("helvetica", "bold");
       doc.setFontSize(12);
@@ -335,8 +323,7 @@ export default function App() {
         yOffset += splitText.length * 5;
       });
 
-      // Footer
-      doc.setFillColor(255, 242, 0); // Yellow footer
+      doc.setFillColor(255, 242, 0);
       doc.rect(0, 287, 210, 10, "F");
       doc.setFont("helvetica", "italic");
       doc.setFontSize(8);
@@ -362,30 +349,26 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-16">
+    <div className="app-container">
       
-      {/* Dynamic Yellow Aardvark-style Header Banner */}
-      <section className="bg-[#fff200] border-b-4 border-[#151b26] py-16 px-4 md:px-8 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-          
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-4xl floating">🪺</span>
-              <span className="font-heading font-extrabold uppercase tracking-widest text-xs px-3 py-1 rounded-full bg-[#151b26] text-white">
-                Incubator Hub
-              </span>
+      {/* Dynamic Yellow Aardvark Banner */}
+      <section className="hero-section">
+        <div className="hero-inner">
+          <div className="hero-content">
+            <div className="hero-tag">
+              <span>🪺</span>
+              <span>Incubator Hub</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-heading font-extrabold text-[#151b26] leading-none mb-6">
+            <h1 className="hero-title">
               Unbox study guides worth talking about.
             </h1>
-            <p className="text-base md:text-lg text-[#151b26] font-medium max-w-xl mb-8 leading-relaxed">
+            <p className="hero-desc">
               Join the book club that's anything but traditional. Pick your courses, unbox reference books, and hatch premium PDF study materials straight to your local nest.
             </p>
-            
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="hero-actions">
               <button 
                 onClick={() => setActiveTab("search")}
-                className="btn-aardvark"
+                className="btn-aardvark is--yellow"
               >
                 Start Unboxing <ChevronRight className="w-5 h-5" />
               </button>
@@ -393,27 +376,23 @@ export default function App() {
             </div>
           </div>
 
-          {/* Large Owl Mascot Visual */}
-          <div className="w-64 h-64 md:w-80 md:h-80 rounded-3xl bg-white border-4 border-[#151b26] shadow-flat flex flex-col items-center justify-center p-6 relative float-mascot">
-            <span className="text-8xl">🦉</span>
-            <div className="absolute -bottom-5 bg-[#ff5a36] text-white border-2 border-[#151b26] px-4 py-1 rounded-full font-heading font-extrabold text-xs uppercase tracking-wider">
-              Nest Guard
-            </div>
+          {/* Large Owl Mascot */}
+          <div className="hero-visual">
+            <span style={{ fontSize: "6rem" }}>🦉</span>
+            <div className="hero-visual-badge">Nest Guard</div>
           </div>
-
         </div>
       </section>
 
       {/* Main navigation header */}
-      <nav className="border-b-2 border-slate-200 bg-white py-4 px-4 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🪹</span>
-            <span className="font-heading font-extrabold text-xl text-[#151b26]">StudyNest</span>
+      <nav className="navbar">
+        <div className="navbar-inner">
+          <div className="navbar-logo">
+            <span>🪹</span>
+            <span>StudyNest</span>
           </div>
 
-          {/* Tabs navigation */}
-          <div className="flex items-center gap-2">
+          <div className="navbar-tabs">
             <button 
               onClick={() => setActiveTab("search")}
               className={`tab-btn ${activeTab === "search" ? "is--active" : ""}`}
@@ -443,40 +422,37 @@ export default function App() {
       </nav>
 
       {/* Wisdom Bubble */}
-      <div className="max-w-6xl mx-auto w-full px-4 mt-8">
-        <div 
-          onClick={changeOwlQuote}
-          className="bg-white border-2 border-[#151b26] p-4 rounded-2xl shadow-flat-btn hover:shadow-flat-btn-hover hover:translate-x-0.5 hover:translate-y-0.5 transition cursor-pointer flex items-center gap-3 max-w-xl"
-        >
-          <span className="text-2xl">💡</span>
-          <p className="text-sm text-slate-700 italic">"{owlQuote}"</p>
+      <div className="wisdom-container">
+        <div onClick={changeOwlQuote} className="wisdom-bubble">
+          <span style={{ fontSize: "1.5rem" }}>💡</span>
+          <p style={{ fontSize: "0.85rem", fontStyle: "italic", margin: 0 }}>"{owlQuote}"</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full px-4 mt-8 flex-1">
+      <div className="main-content">
         
         {/* SEARCH TAB CONTENT */}
         {activeTab === "search" && (
-          <div className="flex flex-col gap-8 fade-in">
+          <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
             
-            {/* Flat-style search and filter headers */}
-            <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="relative flex-1 w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+            {/* Flat search and filter card */}
+            <div className="filter-section">
+              <div className="search-input-wrap">
+                <Search className="search-icon" />
                 <input 
                   type="text" 
                   placeholder="Search course titles, codes, references, or parts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full input-flat pl-12"
+                  className="input-flat"
                 />
               </div>
               
-              <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="filter-selects">
                 <select 
                   value={selectedSemester} 
                   onChange={(e) => setSelectedSemester(e.target.value)}
-                  className="input-flat py-3 cursor-pointer"
+                  className="input-flat"
                 >
                   <option value="all">All Semesters</option>
                   <option value="1">1st Sem</option>
@@ -486,7 +462,7 @@ export default function App() {
                 <select 
                   value={selectedCategory} 
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="input-flat py-3 cursor-pointer"
+                  className="input-flat"
                 >
                   <option value="all">All Categories</option>
                   <option value="SCI">SCI</option>
@@ -496,22 +472,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* Courses catalogue */}
+            {/* Courses list */}
             {filteredCourses.length === 0 ? (
-              <div className="text-center py-20 bg-white border-2 border-[#151b26] rounded-3xl p-8 shadow-flat">
-                <span className="text-5xl block mb-4">🍂</span>
-                <h3 className="text-xl font-bold mb-2">No nests found!</h3>
-                <p className="text-slate-500 max-w-sm mx-auto">No study guides match your queries. Try resetting filters or incubate a new one in the admin section!</p>
+              <div className="text-center py-20 bg-white border-2 border-[#151b26] rounded-3xl p-8 shadow-flat" style={{ textAlign: "center", padding: "4rem 2rem" }}>
+                <span style={{ fontSize: "3rem", display: "block", marginBottom: "1rem" }}>🍂</span>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.5rem" }}>No nests found!</h3>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "350px", margin: "0 auto" }}>No study guides match your queries. Try resetting filters or incubate a new one in the admin section!</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="catalog-grid">
                 {filteredCourses.map((course, idx) => {
                   const theme = CARD_THEMES[idx % CARD_THEMES.length];
                   return (
-                    <div 
-                      key={course.code} 
-                      className="course-card p-6 flex flex-col sm:flex-row gap-6 relative"
-                    >
+                    <div key={course.code} className="course-card">
                       {/* Styled Aardvark Ears (Nest Wings) */}
                       <div className="nest-wings" style={{ color: theme.ears }}>
                         <svg className="nest-wing" fill="currentColor" viewBox="0 0 44 45">
@@ -522,57 +495,57 @@ export default function App() {
                         </svg>
                       </div>
 
-                      {/* Cover spine image container */}
-                      <div className="book-container mx-auto sm:mx-0">
-                        <div className="book-cover h-full" style={{ backgroundColor: theme.bg }}>
+                      {/* Spine Cover book cover */}
+                      <div className="book-container">
+                        <div className="book-cover" style={{ backgroundColor: theme.bg }}>
                           <div className="book-spine"></div>
-                          <div className="h-full flex flex-col justify-between p-3 pt-6 text-[#151b26]">
-                            <div className="font-heading font-extrabold text-xs tracking-wider border-b border-black/15 pb-1">
+                          <div className="book-cover-content">
+                            <div className="book-cover-cat">
                               {course.category}
                             </div>
-                            <div className="font-heading font-extrabold text-lg rotate-0 text-center uppercase tracking-tighter leading-tight break-all">
+                            <div className="book-cover-code">
                               {course.code}
                             </div>
-                            <div className="text-[9px] font-bold text-center opacity-80 uppercase font-mono">
+                            <div className="book-cover-sem">
                               Sem {course.semester}
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Course details right side */}
-                      <div className="flex-1 flex flex-col justify-between">
+                      {/* Card details */}
+                      <div className="card-details">
                         <div>
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span className="tag-genre bg-slate-100">{course.ltp}</span>
-                            <span className="tag-genre bg-amber-100">{course.credits} Credits</span>
+                          <div className="card-tags">
+                            <span className="tag-genre">{course.ltp}</span>
+                            <span className="tag-genre is--amber">{course.credits} Credits</span>
                           </div>
 
-                          <h3 className="text-xl font-extrabold text-[#151b26] mb-1">
+                          <h3 className="card-title">
                             {course.title}
                           </h3>
-                          <p className="text-xs text-slate-500 mb-4 leading-normal line-clamp-3">
+                          <p className="card-desc">
                             {course.description}
                           </p>
 
                           {/* Extracted references section */}
                           {((course.textbooks && course.textbooks.length > 0) || (course.references && course.references.length > 0)) && (
-                            <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                              <h4 className="text-[10px] font-bold text-[#151b26] uppercase tracking-wider mb-2 flex items-center gap-1">
-                                <BookOpen className="w-3 h-3 text-[#ff5a36]" /> Clickable References
+                            <div className="reference-card">
+                              <h4 className="reference-card-title">
+                                <BookOpen style={{ width: "0.85rem", height: "0.85rem", color: "var(--color-orange)" }} /> Clickable References
                               </h4>
-                              <div className="flex flex-col gap-1.5">
+                              <div className="reference-list">
                                 {course.textbooks.map((b, i) => (
                                   <a 
                                     key={i} 
                                     href={b.link} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[11px] text-slate-700 hover:text-black font-semibold flex items-start gap-1 transition"
+                                    className="reference-link"
                                   >
-                                    <span className="text-[#ff5a36] font-bold">•</span>
-                                    <span className="flex-1 hover:underline">
-                                      {b.title} ({b.author}) <ExternalLink className="inline-block w-2.5 h-2.5 ml-0.5 text-slate-400" />
+                                    <span style={{ color: "var(--color-orange)" }}>•</span>
+                                    <span style={{ flex: 1 }}>
+                                      {b.title} ({b.author}) <ExternalLink style={{ display: "inline-block", width: "0.65rem", height: "0.65rem", marginLeft: "0.15rem", verticalAlign: "middle" }} />
                                     </span>
                                   </a>
                                 ))}
@@ -582,11 +555,11 @@ export default function App() {
                                     href={r.link} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[11px] text-slate-700 hover:text-black font-semibold flex items-start gap-1 transition"
+                                    className="reference-link"
                                   >
-                                    <span className="text-[#ff5a36] font-bold">•</span>
-                                    <span className="flex-1 hover:underline">
-                                      {r.title} ({r.author}) <ExternalLink className="inline-block w-2.5 h-2.5 ml-0.5 text-slate-400" />
+                                    <span style={{ color: "var(--color-orange)" }}>•</span>
+                                    <span style={{ flex: 1 }}>
+                                      {r.title} ({r.author}) <ExternalLink style={{ display: "inline-block", width: "0.65rem", height: "0.65rem", marginLeft: "0.15rem", verticalAlign: "middle" }} />
                                     </span>
                                   </a>
                                 ))}
@@ -597,18 +570,18 @@ export default function App() {
 
                         {/* Exam Parts list */}
                         <div>
-                          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-                            <Layers className="w-3.5 h-3.5" /> Incubator Resources
-                          </h4>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="resources-block-title">
+                            <Layers style={{ width: "0.75rem", height: "0.75rem", verticalAlign: "middle", marginRight: "0.2rem" }} /> Incubated Resources
+                          </div>
+                          <div className="resources-grid">
                             {course.parts.map((part) => (
                               <button
                                 key={part}
                                 onClick={() => triggerDownload(course.code, part)}
-                                className="text-left bg-white hover:bg-slate-100 border border-[#151b26] text-[10px] px-3 py-2 rounded-xl font-bold flex items-center justify-between group transition"
+                                className="download-btn"
                               >
-                                <span className="truncate pr-1">{part}</span>
-                                <Download className="w-3 h-3 text-[#151b26] flex-shrink-0" />
+                                <span style={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{part}</span>
+                                <Download className="download-btn-icon" />
                               </button>
                             ))}
                           </div>
@@ -623,50 +596,47 @@ export default function App() {
           </div>
         )}
 
-        {/* HATCHED HISTROY TAB CONTENT */}
+        {/* HATCHED HISTORY TAB CONTENT */}
         {activeTab === "history" && (
-          <div className="fade-in max-w-xl mx-auto w-full">
-            <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat">
-              <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-slate-200">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">🪺</span>
+          <div className="fade-in">
+            <div className="history-panel">
+              <div className="history-header">
+                <div className="history-header-left">
+                  <span style={{ fontSize: "1.75rem" }}>🪺</span>
                   <div>
-                    <h3 className="text-lg font-extrabold text-[#151b26]">Your Study Nest Box</h3>
-                    <p className="text-xs text-slate-500 font-mono">Track downloaded exam eggs</p>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: "bold" }}>Your Study Nest Box</h3>
+                    <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontFamily: "monospace" }}>Track downloaded exam eggs</p>
                   </div>
                 </div>
                 
                 {history.length > 0 && (
-                  <button 
-                    onClick={clearHistory}
-                    className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs font-bold rounded-full transition"
-                  >
+                  <button onClick={clearHistory} className="history-clear-btn">
                     Clear Box
                   </button>
                 )}
               </div>
 
               {history.length === 0 ? (
-                <div className="text-center py-16 text-slate-500">
-                  <span className="text-5xl block mb-3">🐣</span>
-                  <p className="font-bold text-[#151b26] mb-1">No eggs hatched yet!</p>
-                  <p className="text-xs">Unbox resources on the main page to hatch study guides.</p>
+                <div style={{ textAlign: "center", padding: "3rem 1rem", color: "var(--text-muted)" }}>
+                  <span style={{ fontSize: "3rem", display: "block", marginBottom: "0.75rem" }}>🐣</span>
+                  <p style={{ fontWeight: "bold", color: "var(--text-dark)", marginBottom: "0.25rem" }}>No eggs hatched yet!</p>
+                  <p style={{ fontSize: "0.75rem" }}>Unbox resources on the main page to hatch study guides.</p>
                 </div>
               ) : (
-                <div className="flex flex-col gap-3">
+                <div className="history-list">
                   {history.map((item) => (
-                    <div key={item.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-lg mt-0.5">
+                    <div key={item.id} className="history-item">
+                      <div className="history-item-left">
+                        <div className="history-item-icon">
                           🐤
                         </div>
                         <div>
-                          <h4 className="text-sm font-extrabold text-[#151b26] leading-tight">{item.partName}</h4>
-                          <p className="text-xs text-slate-500">{item.courseCode} - {item.courseTitle}</p>
-                          <p className="text-[10px] text-slate-400 mt-1 font-mono">{item.timestamp}</p>
+                          <h4 style={{ fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-dark)" }}>{item.partName}</h4>
+                          <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{item.courseCode} - {item.courseTitle}</p>
+                          <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: "0.25rem", fontFamily: "monospace" }}>{item.timestamp}</p>
                         </div>
                       </div>
-                      <span className="text-[10px] text-emerald-600 font-bold px-3 py-1 rounded-full bg-emerald-100 border border-emerald-200">Hatched</span>
+                      <span className="history-item-tag">Hatched</span>
                     </div>
                   ))}
                 </div>
@@ -677,170 +647,182 @@ export default function App() {
 
         {/* ADMIN INCUBATOR TAB CONTENT */}
         {activeTab === "admin" && (
-          <div className="fade-in max-w-4xl mx-auto w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="fade-in">
+            <div className="admin-grid">
               
               {/* Form 1: Add a course */}
-              <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat">
-                <h3 className="text-lg font-extrabold text-[#151b26] mb-2 flex items-center gap-2">
-                  <Plus className="w-5 h-5 text-[#ff5a36]" /> Bind New Course Book
-                </h3>
-                <p className="text-xs text-slate-500 mb-6 leading-relaxed">Add a new book shell to the StudyNest catalogue.</p>
+              <div className="admin-card">
+                <div>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "0.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <Plus style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-orange)" }} /> Bind New Course Book
+                  </h3>
+                  <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Add a new book shell to the StudyNest catalogue.</p>
 
-                <form onSubmit={handleCreateCourse} className="flex flex-col gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Course Code</label>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. 23ECE101" 
-                        value={newCourse.code}
-                        onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
-                        className="input-flat py-2"
-                      />
+                  <form onSubmit={handleCreateCourse} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                    <div className="form-row-2">
+                      <div className="form-group">
+                        <label>Course Code</label>
+                        <input 
+                          type="text" 
+                          placeholder="e.g. 23ECE101" 
+                          value={newCourse.code}
+                          onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+                          className="input-flat"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Course Title</label>
+                        <input 
+                          type="text" 
+                          placeholder="e.g. Nature Engineering" 
+                          value={newCourse.title}
+                          onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+                          className="input-flat"
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Course Title</label>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. Nature Engineering" 
-                        value={newCourse.title}
-                        onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                        className="input-flat py-2"
-                      />
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Category</label>
-                      <select 
-                        value={newCourse.category}
-                        onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
-                        className="input-flat py-2 cursor-pointer"
-                      >
-                        <option value="SCI">SCI</option>
-                        <option value="ENGG">ENGG</option>
-                        <option value="HUM">HUM</option>
-                      </select>
+                    <div className="form-row-3">
+                      <div className="form-group">
+                        <label>Category</label>
+                        <select 
+                          value={newCourse.category}
+                          onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
+                          className="input-flat"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <option value="SCI">SCI</option>
+                          <option value="ENGG">ENGG</option>
+                          <option value="HUM">HUM</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Credits</label>
+                        <input 
+                          type="number" 
+                          value={newCourse.credits}
+                          onChange={(e) => setNewCourse({ ...newCourse, credits: parseInt(e.target.value) || 1 })}
+                          className="input-flat"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Semester</label>
+                        <input 
+                          type="number" 
+                          value={newCourse.semester}
+                          onChange={(e) => setNewCourse({ ...newCourse, semester: parseInt(e.target.value) || 1 })}
+                          className="input-flat"
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Credits</label>
-                      <input 
-                        type="number" 
-                        value={newCourse.credits}
-                        onChange={(e) => setNewCourse({ ...newCourse, credits: parseInt(e.target.value) || 1 })}
-                        className="input-flat py-2"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Semester</label>
-                      <input 
-                        type="number" 
-                        value={newCourse.semester}
-                        onChange={(e) => setNewCourse({ ...newCourse, semester: parseInt(e.target.value) || 1 })}
-                        className="input-flat py-2"
-                      />
-                    </div>
-                  </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-500 font-bold uppercase">Description</label>
-                    <textarea 
-                      rows="2"
-                      placeholder="Course overview..."
-                      value={newCourse.description}
-                      onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
-                      className="input-flat py-2 resize-none"
-                    />
-                  </div>
-
-                  {/* Add textbooks */}
-                  <div className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                    <span className="text-xs font-bold text-[#ff5a36] uppercase tracking-wider">Textbooks</span>
-                    {newCourse.textbooks.map((b, i) => (
-                      <div key={i} className="text-[11px] text-slate-600 font-medium">{b.title} by {b.author}</div>
-                    ))}
-                    <div className="flex gap-2">
-                      <input 
-                        type="text" 
-                        placeholder="Title" 
-                        value={tempTextbook.title} 
-                        onChange={(e) => setTempTextbook({ ...tempTextbook, title: e.target.value })}
-                        className="input-flat py-1.5 text-xs flex-1"
+                    <div className="form-group">
+                      <label>Description</label>
+                      <textarea 
+                        rows="2"
+                        placeholder="Course overview..."
+                        value={newCourse.description}
+                        onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
+                        className="input-flat"
+                        style={{ resize: "none" }}
                       />
-                      <input 
-                        type="text" 
-                        placeholder="Author" 
-                        value={tempTextbook.author} 
-                        onChange={(e) => setTempTextbook({ ...tempTextbook, author: e.target.value })}
-                        className="input-flat py-1.5 text-xs w-24"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={addTextbookToNewCourse}
-                        className="px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition border border-black/20"
-                      >
-                        Add
-                      </button>
                     </div>
-                  </div>
 
-                  {/* Add references */}
-                  <div className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                    <span className="text-xs font-bold text-[#ff5a36] uppercase tracking-wider">References</span>
-                    {newCourse.references.map((r, i) => (
-                      <div key={i} className="text-[11px] text-slate-600 font-medium">{r.title} by {r.author}</div>
-                    ))}
-                    <div className="flex gap-2">
-                      <input 
-                        type="text" 
-                        placeholder="Title" 
-                        value={tempRef.title} 
-                        onChange={(e) => setTempRef({ ...tempRef, title: e.target.value })}
-                        className="input-flat py-1.5 text-xs flex-1"
-                      />
-                      <input 
-                        type="text" 
-                        placeholder="Author" 
-                        value={tempRef.author} 
-                        onChange={(e) => setTempRef({ ...tempRef, author: e.target.value })}
-                        className="input-flat py-1.5 text-xs w-24"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={addReferenceToNewCourse}
-                        className="px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition border border-black/20"
-                      >
-                        Add
-                      </button>
+                    {/* Add textbooks */}
+                    <div className="admin-subform">
+                      <span className="admin-subform-title">Textbooks</span>
+                      {newCourse.textbooks.map((b, i) => (
+                        <div key={i} style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "500" }}>{b.title} by {b.author}</div>
+                      ))}
+                      <div className="admin-subform-row">
+                        <input 
+                          type="text" 
+                          placeholder="Title" 
+                          value={tempTextbook.title} 
+                          onChange={(e) => setTempTextbook({ ...tempTextbook, title: e.target.value })}
+                          className="input-flat"
+                          style={{ fontSize: "0.7rem", padding: "6px 12px", flex: 1 }}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Author" 
+                          value={tempTextbook.author} 
+                          onChange={(e) => setTempTextbook({ ...tempTextbook, author: e.target.value })}
+                          className="input-flat"
+                          style={{ fontSize: "0.7rem", padding: "6px 12px", width: "90px" }}
+                        />
+                        <button 
+                          type="button" 
+                          onClick={addTextbookToNewCourse}
+                          className="btn-aardvark"
+                          style={{ fontSize: "0.7rem", padding: "6px 16px", borderRadius: "8px" }}
+                        >
+                          Add
+                        </button>
+                      </div>
                     </div>
-                  </div>
 
-                  <button 
-                    type="submit" 
-                    className="w-full btn-aardvark is--yellow py-3 flex justify-center"
-                  >
-                    Confirm & Bind Course
-                  </button>
-                </form>
+                    {/* Add references */}
+                    <div className="admin-subform">
+                      <span className="admin-subform-title">References</span>
+                      {newCourse.references.map((r, i) => (
+                        <div key={i} style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "500" }}>{r.title} by {r.author}</div>
+                      ))}
+                      <div className="admin-subform-row">
+                        <input 
+                          type="text" 
+                          placeholder="Title" 
+                          value={tempRef.title} 
+                          onChange={(e) => setTempRef({ ...tempRef, title: e.target.value })}
+                          className="input-flat"
+                          style={{ fontSize: "0.7rem", padding: "6px 12px", flex: 1 }}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Author" 
+                          value={tempRef.author} 
+                          onChange={(e) => setTempRef({ ...tempRef, author: e.target.value })}
+                          className="input-flat"
+                          style={{ fontSize: "0.7rem", padding: "6px 12px", width: "90px" }}
+                        />
+                        <button 
+                          type="button" 
+                          onClick={addReferenceToNewCourse}
+                          className="btn-aardvark"
+                          style={{ fontSize: "0.7rem", padding: "6px 16px", borderRadius: "8px" }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="btn-aardvark is--yellow"
+                      style={{ width: "100%", padding: "12px", justifyContent: "center" }}
+                    >
+                      Confirm & Bind Course
+                    </button>
+                  </form>
+                </div>
               </div>
 
               {/* Form 2: Upload PDFs */}
-              <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-extrabold text-[#151b26] mb-2 flex items-center gap-2">
-                    <Plus className="w-5 h-5 text-[#ff5a36]" /> Incubate Exam Resource
+              <div className="admin-card">
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "0.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <Plus style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-orange)" }} /> Incubate Exam Resource
                   </h3>
-                  <p className="text-xs text-slate-500 mb-6 leading-relaxed">Add a specific exam note, syllabus part, or question bank to a course book.</p>
+                  <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Add a specific exam note, syllabus part, or question bank to a course book.</p>
 
-                  <form onSubmit={handleAddResource} className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Target Course</label>
+                  <form onSubmit={handleAddResource} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                    <div className="form-group">
+                      <label>Target Course</label>
                       <select 
                         value={selectedCourseCode}
                         onChange={(e) => setSelectedCourseCode(e.target.value)}
-                        className="input-flat py-2 cursor-pointer"
+                        className="input-flat"
+                        style={{ cursor: "pointer" }}
                       >
                         <option value="">-- Select Course --</option>
                         {courses.map(c => (
@@ -849,28 +831,28 @@ export default function App() {
                       </select>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Resource / Part Name</label>
+                    <div className="form-group">
+                      <label>Resource / Part Name</label>
                       <input 
                         type="text" 
                         placeholder="e.g. Midterm 2026 Solved" 
                         value={newResourcePartName}
                         onChange={(e) => setNewResourcePartName(e.target.value)}
-                        className="input-flat py-2"
+                        className="input-flat"
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-slate-500 font-bold uppercase">Upload PDF File</label>
-                      <div className="p-6 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-black/50 rounded-2xl text-center relative transition">
+                    <div className="form-group">
+                      <label>Upload PDF File</label>
+                      <div className="drag-area">
                         <input 
                           type="file" 
                           accept="application/pdf"
                           onChange={handleFileUpload}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
                         />
-                        <span className="text-3xl block mb-2">📁</span>
-                        <p className="text-xs font-bold">
+                        <span style={{ fontSize: "2rem", display: "block", marginBottom: "0.5rem" }}>📁</span>
+                        <p style={{ fontSize: "0.75rem", fontWeight: "bold" }}>
                           {uploadedFileName ? `Selected: ${uploadedFileName}` : "Drag and drop or click to upload PDF"}
                         </p>
                       </div>
@@ -878,19 +860,21 @@ export default function App() {
 
                     <button 
                       type="submit" 
-                      className="w-full btn-aardvark is--yellow py-3 flex justify-center"
+                      className="btn-aardvark is--yellow"
+                      style={{ width: "100%", padding: "12px", justifyContent: "center" }}
                     >
                       Confirm Resource
                     </button>
                   </form>
                 </div>
 
-                <div className="mt-8 border-t border-slate-200 pt-6 flex justify-end">
+                <div style={{ marginTop: "2rem", display: "flex", justifyContent: "flex-end" }}>
                   <button
                     onClick={() => setIsAdmin(false)}
-                    className="px-4 py-2 bg-[#ff5a36] text-white font-bold rounded-full flex items-center gap-1.5 transition"
+                    className="btn-aardvark"
+                    style={{ backgroundColor: "var(--color-orange)", color: "white", padding: "10px 20px" }}
                   >
-                    <LogOut className="w-4 h-4" /> Exit Admin Panel
+                    <LogOut className="w-4 h-4" /> Exit Admin
                   </button>
                 </div>
               </div>
@@ -903,25 +887,26 @@ export default function App() {
 
       {/* LOGIN MODAL */}
       {showAdminLogin && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="modal-overlay">
           <div className="hatch-modal">
-            <h3 className="text-xl font-heading font-extrabold mb-1 flex items-center justify-center gap-2">
-              <Key className="w-5 h-5 text-amber-500" /> Entering Incubator
+            <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
+              <Key style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-yellow)" }} /> Entering Incubator
             </h3>
-            <p className="text-xs text-slate-500 mb-6">Incubator access is locked. Enter the passcode to proceed.</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Incubator access is locked. Enter the passcode to proceed.</p>
 
-            <form onSubmit={handleAdminLogin} className="flex flex-col gap-4">
+            <form onSubmit={handleAdminLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <input 
                 type="password" 
                 placeholder="Enter passcode..."
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full input-flat text-center"
+                className="input-flat"
+                style={{ textAlign: "center" }}
                 autoFocus
               />
-              {adminError && <p className="text-xs text-red-500 font-bold">{adminError}</p>}
+              {adminError && <p style={{ fontSize: "0.7rem", color: "red", fontWeight: "bold" }}>{adminError}</p>}
               
-              <div className="flex gap-3 justify-center mt-2">
+              <div className="modal-footer-btns">
                 <button 
                   type="button" 
                   onClick={() => {
@@ -929,13 +914,15 @@ export default function App() {
                     setAdminPassword("");
                     setAdminError("");
                   }}
-                  className="px-5 py-2.5 bg-slate-200 text-slate-800 rounded-full text-xs font-bold hover:bg-slate-300 transition"
+                  className="tab-btn"
+                  style={{ fontSize: "0.75rem", padding: "8px 16px" }}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-full text-xs font-bold transition border border-black/20"
+                  className="btn-aardvark is--yellow"
+                  style={{ fontSize: "0.75rem", padding: "8px 20px" }}
                 >
                   Confirm Chirp
                 </button>
@@ -947,48 +934,48 @@ export default function App() {
 
       {/* EGG HATCHING DYNAMIC DOWNLOAD MODAL */}
       {hatchingState.active && (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="modal-overlay">
           <div className="hatch-modal">
             {hatchingState.stage === "egg" && (
-              <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center">
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   🥚
                 </div>
-                <p className="text-slate-500 text-xs mt-4 font-mono">Exam egg found in nest...</p>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontFamily: "monospace", marginTop: "1rem" }}>Exam egg found in nest...</p>
               </div>
             )}
 
             {hatchingState.stage === "shaking" && (
-              <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shake-active">
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div className="egg-shaking" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center" }}>
                   🥚
                 </div>
-                <p className="text-amber-500 text-xs font-bold mt-4 font-mono">Incubating study notes...</p>
+                <p style={{ fontSize: "0.75rem", color: "var(--color-orange)", fontWeight: "bold", fontFamily: "monospace", marginTop: "1rem" }}>Incubating study notes...</p>
               </div>
             )}
 
             {hatchingState.stage === "cracked" && (
-              <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shake-active">
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div className="egg-shaking" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center" }}>
                   🐣
                 </div>
-                <p className="text-amber-500 text-xs font-bold mt-4 font-mono">*Chirp Crack Chirp!*</p>
+                <p style={{ fontSize: "0.75rem", color: "var(--color-orange)", fontWeight: "bold", fontFamily: "monospace", marginTop: "1rem" }}>*Chirp Crack Chirp!*</p>
               </div>
             )}
 
             {hatchingState.stage === "hatched" && (
-              <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center animate-bounce text-emerald-500">
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div className="floating" style={{ fontSize: "5rem", width: "8rem", height: "8rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContext: "center", color: "var(--color-green)" }}>
                   🐤
                 </div>
-                <p className="text-emerald-500 text-xs font-extrabold mt-4 font-mono">Resource Hatched! Check Downloads.</p>
+                <p style={{ fontSize: "0.75rem", color: "var(--color-green)", fontWeight: "extrabold", fontFamily: "monospace", marginTop: "1rem" }}>Resource Hatched! Check Downloads.</p>
               </div>
             )}
 
-            <h3 className="text-lg font-heading font-extrabold text-[#151b26] mb-1">
+            <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "var(--text-dark)", marginBottom: "0.25rem" }}>
               {hatchingState.stage === "hatched" ? "Study Bird Flying!" : "Hatching Resource"}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
               {hatchingState.partName} - {hatchingState.courseCode}
             </p>
           </div>
@@ -996,8 +983,8 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="max-w-6xl mx-auto w-full px-4 mt-20 text-center border-t-2 border-slate-200 pt-6">
-        <p className="text-xs text-slate-500 font-mono">
+      <footer className="footer-wrap">
+        <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontFamily: "monospace" }}>
           Made with Love by the StudyNest Team. All study notes incubated locally.
         </p>
         <p 
@@ -1008,7 +995,7 @@ export default function App() {
               setShowAdminLogin(true);
             }
           }}
-          className="text-[10px] text-slate-400 hover:text-amber-500 mt-2 cursor-pointer select-none transition"
+          className="footer-admin-link"
         >
           🔐 Admin Entrance (Password: chirp)
         </p>
