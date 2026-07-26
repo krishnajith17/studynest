@@ -12,13 +12,21 @@ import {
   Award, 
   Key, 
   LogOut,
-  Moon,
-  Sun,
   ExternalLink,
-  Info,
-  Layers
+  Layers,
+  ChevronRight,
+  HelpCircle
 } from "lucide-react";
 import { initialCourses } from "./data";
+
+// Helper for assignable theme colors to courses
+const CARD_THEMES = [
+  { bg: "var(--color-purple)", border: "#b5a8e0", ears: "#9e8fe3" },
+  { bg: "var(--color-orange)", border: "#ff5a36", ears: "#e54724" },
+  { bg: "var(--color-green)", border: "#37f3c1", ears: "#1fe0ae" },
+  { bg: "var(--color-blue)", border: "#00ecef", ears: "#00cfd2" },
+  { bg: "var(--color-yellow)", border: "#fff200", ears: "#e6da00" }
+];
 
 export default function App() {
   const [courses, setCourses] = useState(() => {
@@ -76,7 +84,7 @@ export default function App() {
   const [tempPart, setTempPart] = useState("");
 
   // Funny Quotes & Owl Guard state
-  const [owlQuote, setOwlQuote] = useState("Welcome to StudyNest! Chirp! Select a course and start studying.");
+  const [owlQuote, setOwlQuote] = useState("Unbox study guides worth talking about! Grab a book-card below.");
   
   const funnyQuotes = [
     "Warning: Cramming the night before might cause temporary feather loss.",
@@ -101,7 +109,6 @@ export default function App() {
     setOwlQuote(funnyQuotes[randomIndex]);
   };
 
-  // Add search term matching
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = 
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -122,7 +129,7 @@ export default function App() {
       setShowAdminLogin(false);
       setAdminPassword("");
       setAdminError("");
-      setOwlQuote("Admin verified! You have access to the egg incubator (control panel).");
+      setOwlQuote("Admin verified! Welcome to the book binder dashboard.");
     } else {
       setAdminError("Wrong passcode! Hint: What does a baby bird say?");
     }
@@ -152,7 +159,7 @@ export default function App() {
       references: [],
       parts: []
     });
-    setOwlQuote(`Successfully incubated course: ${createdCourse.title}!`);
+    setOwlQuote(`Successfully bound new course book: ${createdCourse.title}!`);
   };
 
   const addTextbookToNewCourse = () => {
@@ -202,7 +209,6 @@ export default function App() {
 
     setCourses(courses.map((course) => {
       if (course.code === selectedCourseCode) {
-        // If file uploaded, store it in metadata (simulated)
         const updatedParts = [...course.parts, newResourcePartName];
         const updatedCourse = { ...course, parts: updatedParts };
         
@@ -221,7 +227,7 @@ export default function App() {
     setNewResourcePartName("");
     setUploadedFileName("");
     setUploadedFileBase64("");
-    setOwlQuote(`Added exam resource "${newResourcePartName}" to ${selectedCourseCode}!`);
+    setOwlQuote(`Inserted exam notes "${newResourcePartName}" into ${selectedCourseCode}!`);
   };
 
   const triggerDownload = (courseCode, partName) => {
@@ -234,31 +240,26 @@ export default function App() {
       partName
     });
 
-    // Step 1: Shake the egg
     setTimeout(() => {
       setHatchingState(prev => ({ ...prev, stage: "shaking" }));
     }, 400);
 
-    // Step 2: Crack the egg
     setTimeout(() => {
       setHatchingState(prev => ({ ...prev, stage: "cracked" }));
     }, 1500);
 
-    // Step 3: Hatch the baby bird and trigger download
     setTimeout(() => {
       setHatchingState(prev => ({ ...prev, stage: "hatched" }));
       generateAndSavePDF(course, partName);
     }, 2500);
 
-    // Step 4: Reset state
     setTimeout(() => {
       setHatchingState({ active: false, stage: "egg", courseCode: "", partName: "" });
-      setOwlQuote(`A baby bird flew away with your PDF: ${partName}!`);
+      setOwlQuote(`A wise study-bird flew away with your PDF: ${partName}!`);
     }, 4500);
   };
 
   const generateAndSavePDF = (course, partName) => {
-    // Check if there is an uploaded custom file
     if (course.uploadedFiles && course.uploadedFiles[partName]) {
       const customFile = course.uploadedFiles[partName];
       const link = document.createElement("a");
@@ -266,45 +267,45 @@ export default function App() {
       link.download = customFile.name || `${course.code}_${partName.replace(/\s+/g, "_")}.pdf`;
       link.click();
     } else {
-      // Generate a premium dynamic PDF using jsPDF
       const doc = new jsPDF();
       
-      // Header theme: StudyNest Cozy green/amber
-      doc.setFillColor(11, 78, 59); // nest-green
-      doc.rect(0, 0, 210, 40, "F");
+      // Header theme: Cozy dark navy and amber
+      doc.setFillColor(21, 27, 38); // var(--bg-navy)
+      doc.rect(0, 0, 210, 42, "F");
       
       doc.setTextColor(255, 255, 255);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(24);
-      doc.text("StudyNest", 15, 25);
+      doc.setFontSize(26);
+      doc.text("StudyNest", 15, 26);
       
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.text("Premium Exam Study Resource", 145, 25);
+      doc.setTextColor(255, 242, 0); // Bold yellow
+      doc.text("UNBOX STORIES WORTH STUDYING", 132, 25);
 
       // Course Info
-      doc.setTextColor(30, 41, 59);
+      doc.setTextColor(21, 27, 38);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
-      doc.text(`${course.code}: ${course.title}`, 15, 55);
+      doc.text(`${course.code}: ${course.title}`, 15, 58);
 
       doc.setFont("helvetica", "italic");
-      doc.setFontSize(12);
-      doc.text(`Resource: ${partName}`, 15, 65);
-      doc.line(15, 70, 195, 70);
+      doc.setFontSize(11);
+      doc.text(`Incubated Resource: ${partName}`, 15, 68);
+      doc.line(15, 73, 195, 73);
 
       // Content section
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text("Course Overview & Syllabus", 15, 82);
+      doc.setFontSize(13);
+      doc.text("Syllabus & Course Scope", 15, 85);
       
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       const splitDesc = doc.splitTextToSize(course.description, 180);
-      doc.text(splitDesc, 15, 90);
+      doc.text(splitDesc, 15, 93);
 
       // Textbooks & References lists
-      let yOffset = 115;
+      let yOffset = 118;
       doc.setFont("helvetica", "bold");
       doc.setFontSize(12);
       doc.text("Recommended Textbooks:", 15, yOffset);
@@ -322,7 +323,7 @@ export default function App() {
       yOffset += 5;
       doc.setFont("helvetica", "bold");
       doc.setFontSize(12);
-      doc.text("Reference Materials:", 15, yOffset);
+      doc.text("References & Guides:", 15, yOffset);
       yOffset += 8;
 
       doc.setFont("helvetica", "normal");
@@ -335,17 +336,16 @@ export default function App() {
       });
 
       // Footer
-      doc.setFillColor(245, 158, 11); // Amber accent
+      doc.setFillColor(255, 242, 0); // Yellow footer
       doc.rect(0, 287, 210, 10, "F");
       doc.setFont("helvetica", "italic");
       doc.setFontSize(8);
-      doc.setTextColor(255, 255, 255);
-      doc.text("Generated with Love by StudyNest. Keep your feathers aligned and fly high!", 50, 292);
+      doc.setTextColor(21, 27, 38);
+      doc.text("Designed with cozy style by StudyNest Aardvark. Happy Cramming!", 60, 293);
 
       doc.save(`${course.code}_${partName.replace(/\s+/g, "_")}.pdf`);
     }
 
-    // Add to history
     const historyItem = {
       id: Date.now().toString(),
       courseCode: course.code,
@@ -358,493 +358,557 @@ export default function App() {
 
   const clearHistory = () => {
     setHistory([]);
-    setOwlQuote("Your nest history has been blown away!");
+    setOwlQuote("Your catalog of study-chicks was cleared!");
   };
 
   return (
-    <div className="min-height-100vh flex flex-col p-4 md:p-8 max-w-6xl mx-auto">
+    <div className="min-h-screen flex flex-col pb-16">
       
-      {/* Header section with funny logo & quote guard */}
-      <header className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 pb-6 border-b border-[rgba(245,158,11,0.15)]">
-        <div className="flex items-center gap-4 cursor-pointer" onClick={changeOwlQuote}>
-          <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center border-2 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)] floating">
-            <span className="text-3xl">🪺</span>
-          </div>
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              StudyNest <span className="text-amber-500 text-xs px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30">V1.0</span>
+      {/* Dynamic Yellow Aardvark-style Header Banner */}
+      <section className="bg-[#fff200] border-b-4 border-[#151b26] py-16 px-4 md:px-8 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-4xl floating">🪺</span>
+              <span className="font-heading font-extrabold uppercase tracking-widest text-xs px-3 py-1 rounded-full bg-[#151b26] text-white">
+                Incubator Hub
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-heading font-extrabold text-[#151b26] leading-none mb-6">
+              Unbox study guides worth talking about.
             </h1>
-            <p className="text-sm text-slate-400 font-mono">Exam Resource Incubator</p>
+            <p className="text-base md:text-lg text-[#151b26] font-medium max-w-xl mb-8 leading-relaxed">
+              Join the book club that's anything but traditional. Pick your courses, unbox reference books, and hatch premium PDF study materials straight to your local nest.
+            </p>
+            
+            <div className="flex flex-wrap items-center gap-4">
+              <button 
+                onClick={() => setActiveTab("search")}
+                className="btn-aardvark"
+              >
+                Start Unboxing <ChevronRight className="w-5 h-5" />
+              </button>
+              <div className="handwritten">Syllabus scanned & sorted by hand 🦉</div>
+            </div>
+          </div>
+
+          {/* Large Owl Mascot Visual */}
+          <div className="w-64 h-64 md:w-80 md:h-80 rounded-3xl bg-white border-4 border-[#151b26] shadow-flat flex flex-col items-center justify-center p-6 relative float-mascot">
+            <span className="text-8xl">🦉</span>
+            <div className="absolute -bottom-5 bg-[#ff5a36] text-white border-2 border-[#151b26] px-4 py-1 rounded-full font-heading font-extrabold text-xs uppercase tracking-wider">
+              Nest Guard
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Main navigation header */}
+      <nav className="border-b-2 border-slate-200 bg-white py-4 px-4 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🪹</span>
+            <span className="font-heading font-extrabold text-xl text-[#151b26]">StudyNest</span>
+          </div>
+
+          {/* Tabs navigation */}
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setActiveTab("search")}
+              className={`tab-btn ${activeTab === "search" ? "is--active" : ""}`}
+            >
+              All Books
+            </button>
+            <button 
+              onClick={() => setActiveTab("history")}
+              className={`tab-btn ${activeTab === "history" ? "is--active" : ""}`}
+            >
+              Hatched Box ({history.length})
+            </button>
+            <button 
+              onClick={() => {
+                if (isAdmin) {
+                  setActiveTab("admin");
+                } else {
+                  setShowAdminLogin(true);
+                }
+              }}
+              className={`tab-btn ${activeTab === "admin" ? "is--active" : ""}`}
+            >
+              Incubator Admin
+            </button>
           </div>
         </div>
+      </nav>
 
-        {/* Owl mascot with quote bubble */}
-        <div className="flex items-center gap-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 max-w-md w-full glass">
-          <div className="text-4xl animate-bounce">🦉</div>
-          <div className="flex-1">
-            <p className="text-xs text-amber-500 font-bold uppercase tracking-wider mb-1">Nest Guard</p>
-            <p className="text-sm text-slate-200 italic">"{owlQuote}"</p>
-          </div>
-        </div>
-      </header>
-
-      {/* Tabs navigation & options */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 glass">
-          <button 
-            onClick={() => setActiveTab("search")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${activeTab === "search" ? "bg-amber-500 text-slate-950 shadow-lg" : "text-slate-400 hover:text-white"}`}
-          >
-            <Search className="w-4 h-4" /> Search Nest
-          </button>
-          <button 
-            onClick={() => setActiveTab("history")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${activeTab === "history" ? "bg-amber-500 text-slate-950 shadow-lg" : "text-slate-400 hover:text-white"}`}
-          >
-            <HistoryIcon className="w-4 h-4" /> Studied Eggs
-            {history.length > 0 && <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{history.length}</span>}
-          </button>
-          <button 
-            onClick={() => {
-              if (isAdmin) {
-                setActiveTab("admin");
-              } else {
-                setShowAdminLogin(true);
-              }
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${activeTab === "admin" ? "bg-amber-500 text-slate-950 shadow-lg" : "text-slate-400 hover:text-white"}`}
-          >
-            <Sparkles className="w-4 h-4" /> Incubator
-          </button>
-        </div>
-
-        {/* Global Stats */}
-        <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl text-emerald-400 text-sm font-medium">
-          <span>🎯</span>
-          <span>Eggs Hatched: <strong className="text-white text-base">{history.length}</strong></span>
+      {/* Wisdom Bubble */}
+      <div className="max-w-6xl mx-auto w-full px-4 mt-8">
+        <div 
+          onClick={changeOwlQuote}
+          className="bg-white border-2 border-[#151b26] p-4 rounded-2xl shadow-flat-btn hover:shadow-flat-btn-hover hover:translate-x-0.5 hover:translate-y-0.5 transition cursor-pointer flex items-center gap-3 max-w-xl"
+        >
+          <span className="text-2xl">💡</span>
+          <p className="text-sm text-slate-700 italic">"{owlQuote}"</p>
         </div>
       </div>
 
-      {/* SEARCH TAB CONTENT */}
-      {activeTab === "search" && (
-        <div className="flex flex-col gap-6 fade-in">
-          {/* Filters card */}
-          <div className="p-6 rounded-2xl glass flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-              <input 
-                type="text" 
-                placeholder="Search course title, code, references, or exam parts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-12 pr-4 py-3 text-white placeholder-slate-500 search-glow"
-              />
-            </div>
+      <div className="max-w-6xl mx-auto w-full px-4 mt-8 flex-1">
+        
+        {/* SEARCH TAB CONTENT */}
+        {activeTab === "search" && (
+          <div className="flex flex-col gap-8 fade-in">
             
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <select 
-                value={selectedSemester} 
-                onChange={(e) => setSelectedSemester(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm cursor-pointer search-glow flex-1 md:flex-none"
-              >
-                <option value="all">All Semesters</option>
-                <option value="1">Semester I</option>
-                <option value="2">Semester II</option>
-              </select>
-
-              <select 
-                value={selectedCategory} 
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm cursor-pointer search-glow flex-1 md:flex-none"
-              >
-                <option value="all">All Categories</option>
-                <option value="SCI">Basic Sciences (SCI)</option>
-                <option value="ENGG">Engineering (ENGG)</option>
-                <option value="HUM">Humanities (HUM)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Courses list */}
-          {filteredCourses.length === 0 ? (
-            <div className="text-center py-16 bg-slate-900/20 border border-dashed border-slate-800 rounded-2xl p-8 glass">
-              <span className="text-5xl block mb-4">💨</span>
-              <h3 className="text-xl font-bold text-white mb-2">The nest is empty!</h3>
-              <p className="text-slate-400 max-w-sm mx-auto">No courses match your search criteria. Try removing filters or add a new course in the Incubator tab!</p>
-            </div>
-          ) : (
-            <div className="courses-grid">
-              {filteredCourses.map((course) => (
-                <div key={course.code} className="p-6 rounded-2xl glass flex flex-col justify-between hover:-translate-y-1 transition duration-300 border-t-2 border-t-amber-500/50">
-                  <div>
-                    {/* Course Header */}
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <span className="text-xs px-2.5 py-1 rounded-full font-mono font-bold bg-amber-500/10 border border-amber-500/30 text-amber-500 uppercase tracking-wide">
-                        {course.category} | L-T-P: {course.ltp}
-                      </span>
-                      <span className="text-xs text-slate-400 font-mono">Sem {course.semester}</span>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-amber-500">
-                      {course.code} - {course.title}
-                    </h3>
-                    <p className="text-sm text-slate-400 mb-4 line-clamp-3 leading-relaxed">
-                      {course.description}
-                    </p>
-
-                    {/* Extracted references section */}
-                    {((course.textbooks && course.textbooks.length > 0) || (course.references && course.references.length > 0)) && (
-                      <div className="mb-6 p-4 bg-slate-950/40 rounded-xl border border-slate-800/80">
-                        <h4 className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                          <BookOpen className="w-3.5 h-3.5" /> Extracted References
-                        </h4>
-                        <div className="flex flex-col gap-2">
-                          {course.textbooks.map((book, i) => (
-                            <a 
-                              key={i} 
-                              href={book.link} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-xs text-slate-300 hover:text-white flex items-start gap-1 transition"
-                            >
-                              <span className="text-slate-500">•</span>
-                              <span className="flex-1 leading-normal font-medium hover:underline">
-                                {book.title} (Textbook) <ExternalLink className="inline-block w-3 h-3 ml-0.5" />
-                              </span>
-                            </a>
-                          ))}
-                          {course.references.map((ref, i) => (
-                            <a 
-                              key={i} 
-                              href={ref.link} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-xs text-slate-300 hover:text-white flex items-start gap-1 transition"
-                            >
-                              <span className="text-slate-500">•</span>
-                              <span className="flex-1 leading-normal font-medium hover:underline">
-                                {ref.title} (Reference) <ExternalLink className="inline-block w-3 h-3 ml-0.5" />
-                              </span>
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Resource parts to download */}
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5" /> Incubated Resources
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      {course.parts.map((part) => (
-                        <button
-                          key={part}
-                          onClick={() => triggerDownload(course.code, part)}
-                          className="w-full text-left bg-slate-900/60 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-500/30 text-xs px-3.5 py-2.5 rounded-xl text-slate-200 hover:text-white flex items-center justify-between group transition btn-funny"
-                        >
-                          <span className="truncate pr-2 font-medium">{part}</span>
-                          <span className="bg-slate-800 group-hover:bg-amber-500 text-slate-300 group-hover:text-slate-950 p-1.5 rounded-lg transition duration-300 flex items-center justify-center">
-                            <Download className="w-3.5 h-3.5" />
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* HISTORY TAB CONTENT */}
-      {activeTab === "history" && (
-        <div className="fade-in max-w-2xl mx-auto w-full">
-          <div className="p-6 rounded-2xl glass">
-            <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🥚</span>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Incubated Eggs History</h3>
-                  <p className="text-xs text-slate-400 font-mono">Track downloaded exam material</p>
-                </div>
+            {/* Flat-style search and filter headers */}
+            <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="relative flex-1 w-full">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                  type="text" 
+                  placeholder="Search course titles, codes, references, or parts..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full input-flat pl-12"
+                />
               </div>
               
-              {history.length > 0 && (
-                <button 
-                  onClick={clearHistory}
-                  className="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition"
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <select 
+                  value={selectedSemester} 
+                  onChange={(e) => setSelectedSemester(e.target.value)}
+                  className="input-flat py-3 cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5" /> Clear All
-                </button>
-              )}
+                  <option value="all">All Semesters</option>
+                  <option value="1">1st Sem</option>
+                  <option value="2">2nd Sem</option>
+                </select>
+
+                <select 
+                  value={selectedCategory} 
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="input-flat py-3 cursor-pointer"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="SCI">SCI</option>
+                  <option value="ENGG">ENGG</option>
+                  <option value="HUM">HUM</option>
+                </select>
+              </div>
             </div>
 
-            {history.length === 0 ? (
-              <div className="text-center py-12 text-slate-400">
-                <span className="text-4xl block mb-3">🐣</span>
-                <p className="font-semibold text-white mb-1">No eggs hatched yet!</p>
-                <p className="text-xs">Go to the search tab and download resources to hatch your first study bird.</p>
+            {/* Courses catalogue */}
+            {filteredCourses.length === 0 ? (
+              <div className="text-center py-20 bg-white border-2 border-[#151b26] rounded-3xl p-8 shadow-flat">
+                <span className="text-5xl block mb-4">🍂</span>
+                <h3 className="text-xl font-bold mb-2">No nests found!</h3>
+                <p className="text-slate-500 max-w-sm mx-auto">No study guides match your queries. Try resetting filters or incubate a new one in the admin section!</p>
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
-                {history.map((item) => (
-                  <div key={item.id} className="p-4 bg-slate-950/40 rounded-xl border border-slate-800/80 flex items-center justify-between gap-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-lg mt-0.5 text-emerald-400">
-                        🐥
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {filteredCourses.map((course, idx) => {
+                  const theme = CARD_THEMES[idx % CARD_THEMES.length];
+                  return (
+                    <div 
+                      key={course.code} 
+                      className="course-card p-6 flex flex-col sm:flex-row gap-6 relative"
+                    >
+                      {/* Styled Aardvark Ears (Nest Wings) */}
+                      <div className="nest-wings" style={{ color: theme.ears }}>
+                        <svg className="nest-wing" fill="currentColor" viewBox="0 0 44 45">
+                          <path d="M1.335.198c.671-.316 1.5-.254 2.186.187C27.678 16.847 39.839 36.953 44 45h-6.048c-2.382-1.604-6.964-3.674-15.652-4.814C2.999 37.666-.665 14.174.09 2.04.152 1.28.589.515 1.335.198Z" />
+                        </svg>
+                        <svg className="nest-wing" fill="currentColor" viewBox="0 0 29 80">
+                          <path d="M19.388.879c.667-.771 1.647-1.018 2.559-.807.912.21 1.682.956 1.926 1.861C34.595 38.09 25.79 69.237 21.823 80h-4.188c-.17-4.22-2.739-13.318-10.975-22.064-8.493-9.099-8.88-21.913-1.063-37.23C11.221 9.603 19.091 1.266 19.388.879Z" />
+                        </svg>
                       </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-white leading-tight">{item.partName}</h4>
-                        <p className="text-xs text-slate-400">{item.courseCode} - {item.courseTitle}</p>
-                        <p className="text-[10px] text-slate-500 mt-1 font-mono">{item.timestamp}</p>
+
+                      {/* Cover spine image container */}
+                      <div className="book-container mx-auto sm:mx-0">
+                        <div className="book-cover h-full" style={{ backgroundColor: theme.bg }}>
+                          <div className="book-spine"></div>
+                          <div className="h-full flex flex-col justify-between p-3 pt-6 text-[#151b26]">
+                            <div className="font-heading font-extrabold text-xs tracking-wider border-b border-black/15 pb-1">
+                              {course.category}
+                            </div>
+                            <div className="font-heading font-extrabold text-lg rotate-0 text-center uppercase tracking-tighter leading-tight break-all">
+                              {course.code}
+                            </div>
+                            <div className="text-[9px] font-bold text-center opacity-80 uppercase font-mono">
+                              Sem {course.semester}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Course details right side */}
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span className="tag-genre bg-slate-100">{course.ltp}</span>
+                            <span className="tag-genre bg-amber-100">{course.credits} Credits</span>
+                          </div>
+
+                          <h3 className="text-xl font-extrabold text-[#151b26] mb-1">
+                            {course.title}
+                          </h3>
+                          <p className="text-xs text-slate-500 mb-4 leading-normal line-clamp-3">
+                            {course.description}
+                          </p>
+
+                          {/* Extracted references section */}
+                          {((course.textbooks && course.textbooks.length > 0) || (course.references && course.references.length > 0)) && (
+                            <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                              <h4 className="text-[10px] font-bold text-[#151b26] uppercase tracking-wider mb-2 flex items-center gap-1">
+                                <BookOpen className="w-3 h-3 text-[#ff5a36]" /> Clickable References
+                              </h4>
+                              <div className="flex flex-col gap-1.5">
+                                {course.textbooks.map((b, i) => (
+                                  <a 
+                                    key={i} 
+                                    href={b.link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-[11px] text-slate-700 hover:text-black font-semibold flex items-start gap-1 transition"
+                                  >
+                                    <span className="text-[#ff5a36] font-bold">•</span>
+                                    <span className="flex-1 hover:underline">
+                                      {b.title} ({b.author}) <ExternalLink className="inline-block w-2.5 h-2.5 ml-0.5 text-slate-400" />
+                                    </span>
+                                  </a>
+                                ))}
+                                {course.references.map((r, i) => (
+                                  <a 
+                                    key={i} 
+                                    href={r.link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-[11px] text-slate-700 hover:text-black font-semibold flex items-start gap-1 transition"
+                                  >
+                                    <span className="text-[#ff5a36] font-bold">•</span>
+                                    <span className="flex-1 hover:underline">
+                                      {r.title} ({r.author}) <ExternalLink className="inline-block w-2.5 h-2.5 ml-0.5 text-slate-400" />
+                                    </span>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Exam Parts list */}
+                        <div>
+                          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                            <Layers className="w-3.5 h-3.5" /> Incubator Resources
+                          </h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {course.parts.map((part) => (
+                              <button
+                                key={part}
+                                onClick={() => triggerDownload(course.code, part)}
+                                className="text-left bg-white hover:bg-slate-100 border border-[#151b26] text-[10px] px-3 py-2 rounded-xl font-bold flex items-center justify-between group transition"
+                              >
+                                <span className="truncate pr-1">{part}</span>
+                                <Download className="w-3 h-3 text-[#151b26] flex-shrink-0" />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
                       </div>
                     </div>
-                    <span className="text-xs text-emerald-400 font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">Hatched</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ADMIN PANEL TAB CONTENT */}
-      {activeTab === "admin" && (
-        <div className="fade-in max-w-4xl mx-auto w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* Column 1: Add a course */}
-            <div className="p-6 rounded-2xl glass">
-              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                <Plus className="w-5 h-5 text-amber-500" /> Incubate New Course
-              </h3>
-              <p className="text-xs text-slate-400 mb-6 leading-relaxed">Add a new course structure to the local StudyNest catalogue.</p>
-
-              <form onSubmit={handleCreateCourse} className="flex flex-col gap-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Course Code</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 23ECE101" 
-                      value={newCourse.code}
-                      onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Course Title</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Nature Engineering" 
-                      value={newCourse.title}
-                      onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow"
-                    />
+        {/* HATCHED HISTROY TAB CONTENT */}
+        {activeTab === "history" && (
+          <div className="fade-in max-w-xl mx-auto w-full">
+            <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat">
+              <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-slate-200">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">🪺</span>
+                  <div>
+                    <h3 className="text-lg font-extrabold text-[#151b26]">Your Study Nest Box</h3>
+                    <p className="text-xs text-slate-500 font-mono">Track downloaded exam eggs</p>
                   </div>
                 </div>
+                
+                {history.length > 0 && (
+                  <button 
+                    onClick={clearHistory}
+                    className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs font-bold rounded-full transition"
+                  >
+                    Clear Box
+                  </button>
+                )}
+              </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Category</label>
-                    <select 
-                      value={newCourse.category}
-                      onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white search-glow cursor-pointer"
-                    >
-                      <option value="SCI">SCI</option>
-                      <option value="ENGG">ENGG</option>
-                      <option value="HUM">HUM</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Credits</label>
-                    <input 
-                      type="number" 
-                      value={newCourse.credits}
-                      onChange={(e) => setNewCourse({ ...newCourse, credits: parseInt(e.target.value) || 1 })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Semester</label>
-                    <input 
-                      type="number" 
-                      value={newCourse.semester}
-                      onChange={(e) => setNewCourse({ ...newCourse, semester: parseInt(e.target.value) || 1 })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow"
-                    />
-                  </div>
+              {history.length === 0 ? (
+                <div className="text-center py-16 text-slate-500">
+                  <span className="text-5xl block mb-3">🐣</span>
+                  <p className="font-bold text-[#151b26] mb-1">No eggs hatched yet!</p>
+                  <p className="text-xs">Unbox resources on the main page to hatch study guides.</p>
                 </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs text-slate-400 font-semibold uppercase">Description</label>
-                  <textarea 
-                    rows="2"
-                    placeholder="Provide short course overview..."
-                    value={newCourse.description}
-                    onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
-                    className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow resize-none"
-                  />
-                </div>
-
-                {/* Adding Textbooks */}
-                <div className="flex flex-col gap-2 p-3 bg-slate-950/40 rounded-xl border border-slate-800/80">
-                  <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Textbooks</span>
-                  {newCourse.textbooks.map((b, i) => (
-                    <div key={i} className="text-xs text-slate-300">{b.title} by {b.author}</div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {history.map((item) => (
+                    <div key={item.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-lg mt-0.5">
+                          🐤
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-extrabold text-[#151b26] leading-tight">{item.partName}</h4>
+                          <p className="text-xs text-slate-500">{item.courseCode} - {item.courseTitle}</p>
+                          <p className="text-[10px] text-slate-400 mt-1 font-mono">{item.timestamp}</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-emerald-600 font-bold px-3 py-1 rounded-full bg-emerald-100 border border-emerald-200">Hatched</span>
+                    </div>
                   ))}
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Book Title" 
-                      value={tempTextbook.title} 
-                      onChange={(e) => setTempTextbook({ ...tempTextbook, title: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white search-glow flex-1"
-                    />
-                    <input 
-                      type="text" 
-                      placeholder="Author" 
-                      value={tempTextbook.author} 
-                      onChange={(e) => setTempTextbook({ ...tempTextbook, author: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white search-glow w-24"
-                    />
-                    <button 
-                      type="button" 
-                      onClick={addTextbookToNewCourse}
-                      className="px-3 bg-amber-500 text-slate-950 rounded-xl text-xs font-bold"
-                    >
-                      Add
-                    </button>
-                  </div>
                 </div>
-
-                {/* Adding References */}
-                <div className="flex flex-col gap-2 p-3 bg-slate-950/40 rounded-xl border border-slate-800/80">
-                  <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">References</span>
-                  {newCourse.references.map((r, i) => (
-                    <div key={i} className="text-xs text-slate-300">{r.title} by {r.author}</div>
-                  ))}
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Reference Title" 
-                      value={tempRef.title} 
-                      onChange={(e) => setTempRef({ ...tempRef, title: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white search-glow flex-1"
-                    />
-                    <input 
-                      type="text" 
-                      placeholder="Author" 
-                      value={tempRef.author} 
-                      onChange={(e) => setTempRef({ ...tempRef, author: e.target.value })}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white search-glow w-24"
-                    />
-                    <button 
-                      type="button" 
-                      onClick={addReferenceToNewCourse}
-                      className="px-3 bg-amber-500 text-slate-950 rounded-xl text-xs font-bold"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-
-                <button 
-                  type="submit" 
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                >
-                  Confirm & Incubate Course
-                </button>
-              </form>
+              )}
             </div>
+          </div>
+        )}
 
-            {/* Column 2: Upload Resource PDF */}
-            <div className="p-6 rounded-2xl glass flex flex-col justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                  <Plus className="w-5 h-5 text-amber-500" /> Incubate Exam Resource
+        {/* ADMIN INCUBATOR TAB CONTENT */}
+        {activeTab === "admin" && (
+          <div className="fade-in max-w-4xl mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              {/* Form 1: Add a course */}
+              <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat">
+                <h3 className="text-lg font-extrabold text-[#151b26] mb-2 flex items-center gap-2">
+                  <Plus className="w-5 h-5 text-[#ff5a36]" /> Bind New Course Book
                 </h3>
-                <p className="text-xs text-slate-400 mb-6 leading-relaxed">Add a specific exam resource (Syllabus part, Question paper, or Notes) to a course.</p>
+                <p className="text-xs text-slate-500 mb-6 leading-relaxed">Add a new book shell to the StudyNest catalogue.</p>
 
-                <form onSubmit={handleAddResource} className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Target Course</label>
-                    <select 
-                      value={selectedCourseCode}
-                      onChange={(e) => setSelectedCourseCode(e.target.value)}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow cursor-pointer"
-                    >
-                      <option value="">-- Select a Course --</option>
-                      {courses.map(c => (
-                        <option key={c.code} value={c.code}>{c.code} - {c.title}</option>
-                      ))}
-                    </select>
+                <form onSubmit={handleCreateCourse} className="flex flex-col gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Course Code</label>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. 23ECE101" 
+                        value={newCourse.code}
+                        onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+                        className="input-flat py-2"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Course Title</label>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. Nature Engineering" 
+                        value={newCourse.title}
+                        onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+                        className="input-flat py-2"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Category</label>
+                      <select 
+                        value={newCourse.category}
+                        onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
+                        className="input-flat py-2 cursor-pointer"
+                      >
+                        <option value="SCI">SCI</option>
+                        <option value="ENGG">ENGG</option>
+                        <option value="HUM">HUM</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Credits</label>
+                      <input 
+                        type="number" 
+                        value={newCourse.credits}
+                        onChange={(e) => setNewCourse({ ...newCourse, credits: parseInt(e.target.value) || 1 })}
+                        className="input-flat py-2"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Semester</label>
+                      <input 
+                        type="number" 
+                        value={newCourse.semester}
+                        onChange={(e) => setNewCourse({ ...newCourse, semester: parseInt(e.target.value) || 1 })}
+                        className="input-flat py-2"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Resource Name / Part</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 2026 Midterm Solved Papers" 
-                      value={newResourcePartName}
-                      onChange={(e) => setNewResourcePartName(e.target.value)}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white search-glow"
+                    <label className="text-xs text-slate-500 font-bold uppercase">Description</label>
+                    <textarea 
+                      rows="2"
+                      placeholder="Course overview..."
+                      value={newCourse.description}
+                      onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
+                      className="input-flat py-2 resize-none"
                     />
                   </div>
 
-                  {/* PDF Upload */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-slate-400 font-semibold uppercase">Upload PDF File (Optional)</label>
-                    <div className="p-6 bg-slate-950/60 border border-dashed border-slate-800 rounded-xl text-center relative hover:border-amber-500/50 transition">
+                  {/* Add textbooks */}
+                  <div className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <span className="text-xs font-bold text-[#ff5a36] uppercase tracking-wider">Textbooks</span>
+                    {newCourse.textbooks.map((b, i) => (
+                      <div key={i} className="text-[11px] text-slate-600 font-medium">{b.title} by {b.author}</div>
+                    ))}
+                    <div className="flex gap-2">
                       <input 
-                        type="file" 
-                        accept="application/pdf"
-                        onChange={handleFileUpload}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        type="text" 
+                        placeholder="Title" 
+                        value={tempTextbook.title} 
+                        onChange={(e) => setTempTextbook({ ...tempTextbook, title: e.target.value })}
+                        className="input-flat py-1.5 text-xs flex-1"
                       />
-                      <span className="text-3xl block mb-2">📁</span>
-                      <p className="text-xs text-slate-400 font-semibold">
-                        {uploadedFileName ? `Selected: ${uploadedFileName}` : "Drag and drop or click to upload PDF"}
-                      </p>
-                      <p className="text-[10px] text-slate-500 mt-1">Files are saved inside local simulated DB</p>
+                      <input 
+                        type="text" 
+                        placeholder="Author" 
+                        value={tempTextbook.author} 
+                        onChange={(e) => setTempTextbook({ ...tempTextbook, author: e.target.value })}
+                        className="input-flat py-1.5 text-xs w-24"
+                      />
+                      <button 
+                        type="button" 
+                        onClick={addTextbookToNewCourse}
+                        className="px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition border border-black/20"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Add references */}
+                  <div className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <span className="text-xs font-bold text-[#ff5a36] uppercase tracking-wider">References</span>
+                    {newCourse.references.map((r, i) => (
+                      <div key={i} className="text-[11px] text-slate-600 font-medium">{r.title} by {r.author}</div>
+                    ))}
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        placeholder="Title" 
+                        value={tempRef.title} 
+                        onChange={(e) => setTempRef({ ...tempRef, title: e.target.value })}
+                        className="input-flat py-1.5 text-xs flex-1"
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="Author" 
+                        value={tempRef.author} 
+                        onChange={(e) => setTempRef({ ...tempRef, author: e.target.value })}
+                        className="input-flat py-1.5 text-xs w-24"
+                      />
+                      <button 
+                        type="button" 
+                        onClick={addReferenceToNewCourse}
+                        className="px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition border border-black/20"
+                      >
+                        Add
+                      </button>
                     </div>
                   </div>
 
                   <button 
                     type="submit" 
-                    className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                    className="w-full btn-aardvark is--yellow py-3 flex justify-center"
                   >
-                    Incubate Exam Material
+                    Confirm & Bind Course
                   </button>
                 </form>
               </div>
 
-              <div className="mt-8 border-t border-slate-800 pt-6">
-                <button
-                  onClick={() => setIsAdmin(false)}
-                  className="px-4 py-2 bg-slate-950/60 text-slate-400 hover:text-white border border-slate-800 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ml-auto"
-                >
-                  <LogOut className="w-4 h-4" /> Exit Admin
-                </button>
+              {/* Form 2: Upload PDFs */}
+              <div className="bg-white border-2 border-[#151b26] p-6 rounded-3xl shadow-flat flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg font-extrabold text-[#151b26] mb-2 flex items-center gap-2">
+                    <Plus className="w-5 h-5 text-[#ff5a36]" /> Incubate Exam Resource
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-6 leading-relaxed">Add a specific exam note, syllabus part, or question bank to a course book.</p>
+
+                  <form onSubmit={handleAddResource} className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Target Course</label>
+                      <select 
+                        value={selectedCourseCode}
+                        onChange={(e) => setSelectedCourseCode(e.target.value)}
+                        className="input-flat py-2 cursor-pointer"
+                      >
+                        <option value="">-- Select Course --</option>
+                        {courses.map(c => (
+                          <option key={c.code} value={c.code}>{c.code} - {c.title}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Resource / Part Name</label>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. Midterm 2026 Solved" 
+                        value={newResourcePartName}
+                        onChange={(e) => setNewResourcePartName(e.target.value)}
+                        className="input-flat py-2"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-500 font-bold uppercase">Upload PDF File</label>
+                      <div className="p-6 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-black/50 rounded-2xl text-center relative transition">
+                        <input 
+                          type="file" 
+                          accept="application/pdf"
+                          onChange={handleFileUpload}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <span className="text-3xl block mb-2">📁</span>
+                        <p className="text-xs font-bold">
+                          {uploadedFileName ? `Selected: ${uploadedFileName}` : "Drag and drop or click to upload PDF"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="w-full btn-aardvark is--yellow py-3 flex justify-center"
+                    >
+                      Confirm Resource
+                    </button>
+                  </form>
+                </div>
+
+                <div className="mt-8 border-t border-slate-200 pt-6 flex justify-end">
+                  <button
+                    onClick={() => setIsAdmin(false)}
+                    className="px-4 py-2 bg-[#ff5a36] text-white font-bold rounded-full flex items-center gap-1.5 transition"
+                  >
+                    <LogOut className="w-4 h-4" /> Exit Admin Panel
+                  </button>
+                </div>
               </div>
+
             </div>
-
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ADMIN PASSWORD LOGIN MODAL */}
+      </div>
+
+      {/* LOGIN MODAL */}
       {showAdminLogin && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-sm glass fade-in shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+          <div className="hatch-modal">
+            <h3 className="text-xl font-heading font-extrabold mb-1 flex items-center justify-center gap-2">
               <Key className="w-5 h-5 text-amber-500" /> Entering Incubator
             </h3>
-            <p className="text-xs text-slate-400 mb-6">Incubator access is locked. Enter the passcode to proceed.</p>
+            <p className="text-xs text-slate-500 mb-6">Incubator access is locked. Enter the passcode to proceed.</p>
 
             <form onSubmit={handleAdminLogin} className="flex flex-col gap-4">
               <input 
@@ -852,12 +916,12 @@ export default function App() {
                 placeholder="Enter passcode..."
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 text-sm search-glow"
+                className="w-full input-flat text-center"
                 autoFocus
               />
-              {adminError && <p className="text-xs text-red-500 font-semibold">{adminError}</p>}
+              {adminError && <p className="text-xs text-red-500 font-bold">{adminError}</p>}
               
-              <div className="flex gap-3 justify-end mt-2">
+              <div className="flex gap-3 justify-center mt-2">
                 <button 
                   type="button" 
                   onClick={() => {
@@ -865,13 +929,13 @@ export default function App() {
                     setAdminPassword("");
                     setAdminError("");
                   }}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-700 transition"
+                  className="px-5 py-2.5 bg-slate-200 text-slate-800 rounded-full text-xs font-bold hover:bg-slate-300 transition"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition"
+                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-full text-xs font-bold transition border border-black/20"
                 >
                   Confirm Chirp
                 </button>
@@ -884,47 +948,47 @@ export default function App() {
       {/* EGG HATCHING DYNAMIC DOWNLOAD MODAL */}
       {hatchingState.active && (
         <div className="fixed inset-0 bg-slate-950/90 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="text-center max-w-sm w-full fade-in p-8 rounded-3xl glass border border-amber-500/20">
+          <div className="hatch-modal">
             {hatchingState.stage === "egg" && (
               <div className="mb-6">
                 <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center">
                   🥚
                 </div>
-                <p className="text-slate-400 text-sm mt-4 font-mono">Exam egg found in nest...</p>
+                <p className="text-slate-500 text-xs mt-4 font-mono">Exam egg found in nest...</p>
               </div>
             )}
 
             {hatchingState.stage === "shaking" && (
               <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shaking">
+                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shake-active">
                   🥚
                 </div>
-                <p className="text-amber-500 text-sm font-bold mt-4 font-mono">Incubating study notes...</p>
+                <p className="text-amber-500 text-xs font-bold mt-4 font-mono">Incubating study notes...</p>
               </div>
             )}
 
             {hatchingState.stage === "cracked" && (
               <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shaking">
+                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center egg-shake-active">
                   🐣
                 </div>
-                <p className="text-amber-400 text-sm font-bold mt-4 font-mono">*Chirp Crack Chirp!*</p>
+                <p className="text-amber-500 text-xs font-bold mt-4 font-mono">*Chirp Crack Chirp!*</p>
               </div>
             )}
 
             {hatchingState.stage === "hatched" && (
               <div className="mb-6">
-                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center animate-bounce text-emerald-400">
+                <div className="text-8xl w-32 h-32 mx-auto flex items-center justify-center animate-bounce text-emerald-500">
                   🐤
                 </div>
-                <p className="text-emerald-400 text-sm font-extrabold mt-4 font-mono">Resource Hatched! Check Downloads.</p>
+                <p className="text-emerald-500 text-xs font-extrabold mt-4 font-mono">Resource Hatched! Check Downloads.</p>
               </div>
             )}
 
-            <h3 className="text-lg font-bold text-white mb-1">
+            <h3 className="text-lg font-heading font-extrabold text-[#151b26] mb-1">
               {hatchingState.stage === "hatched" ? "Study Bird Flying!" : "Hatching Resource"}
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               {hatchingState.partName} - {hatchingState.courseCode}
             </p>
           </div>
@@ -932,7 +996,7 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="mt-16 text-center pb-8 border-t border-[rgba(245,158,11,0.15)] pt-6">
+      <footer className="max-w-6xl mx-auto w-full px-4 mt-20 text-center border-t-2 border-slate-200 pt-6">
         <p className="text-xs text-slate-500 font-mono">
           Made with Love by the StudyNest Team. All study notes incubated locally.
         </p>
@@ -944,7 +1008,7 @@ export default function App() {
               setShowAdminLogin(true);
             }
           }}
-          className="text-[10px] text-slate-600 hover:text-amber-500/50 mt-2 cursor-pointer select-none transition"
+          className="text-[10px] text-slate-400 hover:text-amber-500 mt-2 cursor-pointer select-none transition"
         >
           🔐 Admin Entrance (Password: chirp)
         </p>

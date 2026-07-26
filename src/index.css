@@ -1,31 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@400;700&display=swap');
 
 :root {
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Space Grotesk', monospace;
+  --font-sans: 'Outfit', -apple-system, sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-hand: 'Caveat', cursive;
+
+  /* Aardvark-inspired Color Palette */
+  --bg-sand: #fbf9f4; /* Warm warm cream background */
+  --bg-navy: #151b26; /* Dark navy for contrasts */
+  --bg-card: #ffffff;
   
-  /* Color Palette - Cozy Forest Nest */
-  --bg-main: #0b0f19;
-  --bg-card: rgba(22, 28, 45, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.8);
+  /* Brand Bold Colors */
+  --color-yellow: #fff200; /* Bold primary yellow */
+  --color-orange: #ff5a36; /* Crimson orange */
+  --color-purple: #b5a8e0; /* Lavender purple */
+  --color-green: #37f3c1;  /* Mint green */
+  --color-blue: #00ecef;   /* Sky blue */
   
-  --primary: #f59e0b; /* Amber */
-  --primary-glow: rgba(245, 158, 11, 0.3);
-  --secondary: #10b981; /* Emerald */
-  --secondary-glow: rgba(16, 185, 129, 0.2);
+  --text-dark: #151b26;
+  --text-muted: #5e6b7e;
+  --text-light: #ffffff;
   
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-glow: #fbbf24;
+  --border-dark: #151b26;
+  --border-light: rgba(21, 27, 38, 0.1);
   
-  --border: rgba(245, 158, 11, 0.15);
-  --border-focus: rgba(245, 158, 11, 0.5);
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
+  --border-radius-sm: 8px;
   
-  --nest-green: #064e3b;
-  --nest-brown: #78350f;
-  
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-flat: 4px 4px 0px #151b26;
+  --shadow-flat-hover: 8px 8px 0px #151b26;
+  --shadow-flat-btn: 3px 3px 0px #151b26;
+  --shadow-flat-btn-hover: 1px 1px 0px #151b26;
 }
 
 * {
@@ -36,144 +43,241 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-main);
-  color: var(--text-main);
+  background-color: var(--bg-sand);
+  color: var(--text-dark);
   min-height: 100vh;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
-  background-attachment: fixed;
 }
 
-/* Glassmorphism utility */
-.glass {
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 16px;
+/* Custom Headings */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--text-dark);
+  font-weight: 700;
+  line-height: 1.1;
 }
 
-.glass:hover {
-  background: var(--bg-card-hover);
-  border-color: rgba(245, 158, 11, 0.3);
+/* Handwritten text styles */
+.handwritten {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  color: var(--color-orange);
+  transform: rotate(-3deg);
+  display: inline-block;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+/* Main layouts */
+.u-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* Shaking animation for egg */
+/* Aardvark Pill Button */
+.btn-aardvark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-navy);
+  color: var(--text-light);
+  border: 2px solid var(--border-dark);
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-flat-btn);
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.btn-aardvark:hover {
+  top: 2px;
+  left: 2px;
+  box-shadow: var(--shadow-flat-btn-hover);
+  background-color: #242f42;
+}
+
+.btn-aardvark.is--yellow {
+  background-color: var(--color-yellow);
+  color: var(--text-dark);
+}
+
+.btn-aardvark.is--yellow:hover {
+  background-color: #e6da00;
+}
+
+/* Tab button styling */
+.tab-btn {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 30px;
+  border: 2px solid var(--border-dark);
+  background-color: transparent;
+  color: var(--text-dark);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tab-btn:hover {
+  background-color: rgba(21, 27, 38, 0.05);
+}
+
+.tab-btn.is--active {
+  background-color: var(--bg-navy);
+  color: var(--text-light);
+  box-shadow: var(--shadow-flat-btn);
+}
+
+/* Book Cover Styling (left side of card) */
+.book-container {
+  perspective: 1000px;
+  width: 140px;
+  height: 200px;
+  flex-shrink: 0;
+}
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-15deg);
+  transition: transform 0.5s ease;
+  box-shadow: 10px 10px 20px rgba(0,0,0,0.15);
+  border-radius: 4px 12px 12px 4px;
+  overflow: hidden;
+  border: 2px solid var(--border-dark);
+}
+
+.book-container:hover .book-cover {
+  transform: rotateY(-5deg) scale(1.03);
+  box-shadow: 12px 12px 25px rgba(0,0,0,0.2);
+}
+
+.book-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 100%;
+  background: rgba(0,0,0,0.15);
+  box-shadow: inset -2px 0 3px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+/* Course card styling */
+.course-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-flat);
+  transition: var(--transition);
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.course-card:hover {
+  top: -4px;
+  left: -4px;
+  box-shadow: var(--shadow-flat-hover);
+}
+
+/* Tag colors */
+.tag-genre {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 6px 16px;
+  border-radius: 30px;
+  border: 2px solid var(--border-dark);
+  color: var(--text-dark);
+}
+
+/* Dynamic color blocks */
+.bg-yellow { background-color: var(--color-yellow); }
+.bg-orange { background-color: var(--color-orange); }
+.bg-purple { background-color: var(--color-purple); }
+.bg-green { background-color: var(--color-green); }
+.bg-blue { background-color: var(--color-blue); }
+
+/* Aardvark Ears SVG container (StudyNest variant: Nest Wings) */
+.nest-wings {
+  position: absolute;
+  top: -12px;
+  left: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.nest-wing {
+  width: 44px;
+  height: 45px;
+  color: inherit;
+}
+
+/* Custom inputs */
+.input-flat {
+  border: 2px solid var(--border-dark);
+  border-radius: var(--border-radius-md);
+  background-color: white;
+  padding: 14px 20px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--text-dark);
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: var(--transition);
+}
+
+.input-flat:focus {
+  outline: none;
+  box-shadow: 4px 4px 0px var(--border-dark);
+  background-color: #fffdf9;
+}
+
+/* Egg hatching modal/popup */
+.hatch-modal {
+  background: white;
+  border: 3px solid var(--border-dark);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 12px 12px 0px var(--border-dark);
+  max-width: 400px;
+  width: 100%;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+}
+
+/* Egg shake animation */
 @keyframes egg-shake {
   0% { transform: rotate(0deg); }
-  15% { transform: rotate(8deg) scale(1.05); }
-  30% { transform: rotate(-8deg) scale(1.05); }
-  45% { transform: rotate(5deg) scale(1.05); }
-  60% { transform: rotate(-5deg) scale(1.05); }
-  75% { transform: rotate(2deg); }
+  20% { transform: rotate(8deg) scale(1.05); }
+  40% { transform: rotate(-8deg) scale(1.05); }
+  60% { transform: rotate(4deg) scale(1.05); }
+  80% { transform: rotate(-4deg) scale(1.05); }
   100% { transform: rotate(0deg); }
 }
 
-.egg-shaking {
+.egg-shake-active {
   animation: egg-shake 0.8s ease-in-out infinite;
 }
 
-/* Bounce animation */
+/* Floating mascot animation */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
 }
 
-.floating {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Page transitons */
-.fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Hatching crack line */
-@keyframes crack {
-  0% { clip-path: inset(0 0 100% 0); }
-  100% { clip-path: inset(0 0 0 0); }
-}
-
-/* Funny button hover effect */
-.btn-funny {
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition);
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.btn-funny::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease-out, height 0.6s ease-out;
-}
-
-.btn-funny:hover::before {
-  width: 300px;
-  height: 300px;
-}
-
-/* Custom interactive input */
-.search-glow {
-  box-shadow: 0 0 0 0 transparent;
-  transition: var(--transition);
-}
-
-.search-glow:focus {
-  outline: none;
-  box-shadow: 0 0 15px var(--primary-glow);
-  border-color: var(--border-focus);
-}
-
-/* Course Card grid */
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-/* Nest grid border effect */
-.nest-border {
-  border-image: linear-gradient(135deg, var(--primary), var(--secondary)) 1;
-}
-
-/* Animations for small bird flying */
-@keyframes fly-away {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-  100% { transform: translate(150px, -150px) scale(0.2) rotate(45deg); opacity: 0; }
-}
-
-.flying-bird {
-  animation: fly-away 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+.float-mascot {
+  animation: float 4s ease-in-out infinite;
 }
