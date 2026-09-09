@@ -13,21 +13,24 @@ import AdminLoginModal from "./components/AdminLoginModal";
 import AdminPanel from "./components/AdminPanel";
 import HistoryDrawer from "./components/HistoryDrawer";
 import BookmarksDrawer from "./components/BookmarksDrawer";
+import SgpaCalculator from "./components/SgpaCalculator";
+import LearningHub from "./components/LearningHub";
+import DepartmentFrameworkModal from "./components/DepartmentFrameworkModal";
 import Footer from "./components/Footer";
 
 export default function App() {
   /* ── Persistence ── */
-  const [courses, setCourses] = useLocalStorage("studynest_pro_courses", initialCourses);
-  const [bookmarks, setBookmarks] = useLocalStorage("studynest_pro_bookmarks", ["23MAT124", "23ECE101"]);
-  const [history, setHistory] = useLocalStorage("studynest_pro_history", []);
-  const [theme, setTheme] = useLocalStorage("studynest_theme", "dark");
+  const [courses, setCourses] = useLocalStorage("amrita_eac_courses_v3", initialCourses);
+  const [bookmarks, setBookmarks] = useLocalStorage("amrita_eac_bookmarks_v3", ["23MAT124", "23ECE101", "23ECE103"]);
+  const [history, setHistory] = useLocalStorage("amrita_eac_history_v3", []);
+  const [theme, setTheme] = useLocalStorage("amrita_eac_theme_v3", "dark");
 
-  /* ── UI / Filter States ── */
+  /* ── UI / View Navigation ── */
+  const [activeView, setActiveView] = useState("browse"); // "browse", "sgpa", "hub", "admin"
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSemester, setSelectedSemester] = useState("all");
+  const [selectedSemester, setSelectedSemester] = useState("1"); // default to Semester 1
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES.ALL);
   const [sortBy, setSortBy] = useState("code");
-  const [activeView, setActiveView] = useState("browse"); // "browse" or "admin"
 
   /* ── Modals & Drawers ── */
   const [detailCourse, setDetailCourse] = useState(null);
@@ -35,6 +38,7 @@ export default function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+  const [isDeptModalOpen, setIsDeptModalOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   /* ── Synchronize Theme with Document Root ── */
@@ -112,7 +116,6 @@ export default function App() {
 
   const handleDownloadExecution = useCallback(
     (course, partName) => {
-      // Check if custom uploaded file exists
       if (partName && course.uploadedFiles && course.uploadedFiles[partName]) {
         const customFile = course.uploadedFiles[partName];
         const link = document.createElement("a");
@@ -122,17 +125,15 @@ export default function App() {
           `${course.code}_${partName.replace(/\s+/g, "_")}.pdf`;
         link.click();
       } else {
-        // Generate formatted multi-page PDF
         generateCoursePDF(course, partName);
       }
 
-      // Record in History
       const now = new Date();
       const historyItem = {
         id: Date.now().toString(),
         courseCode: course.code,
         courseTitle: course.title,
-        partName: partName || "Full Course Guide",
+        partName: partName || "Full Syllabus",
         timestamp: `${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • ${now.toLocaleDateString([], { month: 'short', day: 'numeric' })}`,
       };
 
@@ -146,7 +147,7 @@ export default function App() {
     if (course) {
       handleStartDownload(
         course,
-        item.partName === "Full Course Guide" ? null : item.partName
+        item.partName === "Full Syllabus" ? null : item.partName
       );
     } else {
       alert("This course is no longer in the active curriculum.");
@@ -155,18 +156,18 @@ export default function App() {
 
   const hasActiveFilters =
     searchQuery !== "" ||
-    selectedSemester !== "all" ||
+    selectedSemester !== "1" ||
     selectedCategory !== CATEGORIES.ALL;
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setSelectedSemester("all");
+    setSelectedSemester("1");
     setSelectedCategory(CATEGORIES.ALL);
   };
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      {/* Global Navigation */}
+      {/* Navigation Bar */}
       <Navbar
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -182,20 +183,31 @@ export default function App() {
         }}
         activeView={activeView}
         onNavigateView={setActiveView}
+        onOpenDepartmentModal={() => setIsDeptModalOpen(true)}
       />
 
-      {/* Main Content Area */}
+      {/* Main View Router */}
       <main style={{ flex: 1 }}>
-        {activeView === "admin" ? (
+        {activeView === "admin" && (
           <AdminPanel
             courses={courses}
             onSaveCourses={setCourses}
             onResetToDefaults={() => setCourses(initialCourses)}
             onBackToBrowse={() => setActiveView("browse")}
           />
-        ) : (
+        )}
+
+        {activeView === "sgpa" && (
+          <SgpaCalculator courses={courses} />
+        )}
+
+        {activeView === "hub" && (
+          <LearningHub />
+        )}
+
+        {activeView === "browse" && (
           <>
-            {/* Hero Banner with Search and Stats */}
+            {/* Hero Section */}
             <HeroSection
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -207,7 +219,7 @@ export default function App() {
               onSelectSemester={setSelectedSemester}
             />
 
-            {/* Courses Catalogue Section */}
+            {/* Courses Catalogue */}
             <div className="container">
               <FilterBar
                 selectedCategory={selectedCategory}
@@ -220,7 +232,6 @@ export default function App() {
                 hasActiveFilters={hasActiveFilters}
               />
 
-              {/* Course Cards Grid */}
               {filteredCourses.length === 0 ? (
                 <div
                   style={{
@@ -306,6 +317,12 @@ export default function App() {
         }}
       />
 
+      {/* Department Framework Modal */}
+      <DepartmentFrameworkModal
+        isOpen={isDeptModalOpen}
+        onClose={() => setIsDeptModalOpen(false)}
+      />
+
       {/* Recent History Slide-over */}
       <HistoryDrawer
         isOpen={isHistoryOpen}
@@ -325,7 +342,7 @@ export default function App() {
         onSelectCourse={(course) => setDetailCourse(course)}
       />
 
-      {/* Footer */}
+      {/* Site Footer */}
       <Footer />
     </div>
   );

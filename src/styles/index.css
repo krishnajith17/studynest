@@ -232,6 +232,15 @@ a {
   min-height: 40px;
 }
 
+@media (max-width: 680px) {
+  .nav-desktop-links span, .nav-btn-text {
+    display: none;
+  }
+  .nav-btn {
+    padding: 0.45rem 0.6rem;
+  }
+}
+
 .nav-btn:hover {
   color: var(--text-primary);
   background: var(--bg-surface-elevated);
