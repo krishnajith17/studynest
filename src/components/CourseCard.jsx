@@ -26,6 +26,8 @@ export default function CourseCard({
     }
   };
 
+  const fileCount = (course.files?.length || 0) + Object.keys(course.uploadedFiles || {}).length;
+
   return (
     <div className="course-card">
       <div>
@@ -62,6 +64,14 @@ export default function CourseCard({
           <span>L-T-P: <strong>{course.ltp}</strong></span>
           <span>•</span>
           <span><strong>{course.textbooks?.length || 0}</strong> Books</span>
+          {fileCount > 0 && (
+            <>
+              <span>•</span>
+              <span style={{ color: "var(--accent-primary)", fontWeight: 700 }}>
+                📎 {fileCount} File{fileCount > 1 ? "s" : ""}
+              </span>
+            </>
+          )}
         </div>
 
         {/* Description */}

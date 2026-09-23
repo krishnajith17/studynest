@@ -117,15 +117,18 @@ export default function App() {
   }, []);
 
   const handleDownloadExecution = useCallback(
-    (course, partName) => {
-      if (partName && course.uploadedFiles && course.uploadedFiles[partName]) {
-        const customFile = course.uploadedFiles[partName];
+      const customFile = (partName && course.uploadedFiles && course.uploadedFiles[partName]) ||
+        (partName && Array.isArray(course.files) && course.files.find(f => f.unitName === partName || f.title === partName));
+
+      if (customFile && customFile.data) {
         const link = document.createElement("a");
         link.href = customFile.data;
         link.download =
           customFile.name ||
           `${course.code}_${partName.replace(/\s+/g, "_")}.pdf`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
       } else {
         generateCoursePDF(course, partName);
       }

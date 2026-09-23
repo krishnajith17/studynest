@@ -12,7 +12,9 @@ import {
   FlaskConical,
   CheckSquare,
   Square,
-  Sparkles
+  Sparkles,
+  FileText,
+  FolderOpen
 } from "lucide-react";
 
 export default function CourseDetailModal({
@@ -37,6 +39,37 @@ export default function CourseDetailModal({
 
   const hasLab = course.experiments && course.experiments.length > 0;
   const hasExt = course.externalResources && course.externalResources.length > 0;
+
+  // Extract all custom files attached to this course
+  const courseFiles = React.useMemo(() => {
+    const list = [];
+    if (Array.isArray(course.files)) {
+      list.push(...course.files);
+    }
+    if (course.uploadedFiles && typeof course.uploadedFiles === "object") {
+      Object.entries(course.uploadedFiles).forEach(([unitName, f]) => {
+        if (!list.some(existing => existing.name === f.name && existing.unitName === unitName)) {
+          list.push({
+            ...f,
+            unitName,
+            title: f.title || unitName || f.name,
+            category: f.category || "notes"
+          });
+        }
+      });
+    }
+    return list;
+  }, [course]);
+
+  const handleDownloadCustomFile = (f) => {
+    if (!f || !f.data) return;
+    const link = document.createElement("a");
+    link.href = f.data;
+    link.download = f.name || `${course.code}_material.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -122,6 +155,17 @@ export default function CourseDetailModal({
               🌐 Simulators & Videos ({course.externalResources.length})
             </button>
           )}
+          {courseFiles.length > 0 && (
+            <button 
+              type="button"
+              className={`filter-pill ${activeTab === "materials" ? "active" : ""}`}
+              onClick={() => setActiveTab("materials")}
+              style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}
+            >
+              <FolderOpen size={14} />
+              <span>Study Files ({courseFiles.length})</span>
+            </button>
+          )}
         </div>
 
         {/* Modal Body */}
@@ -190,9 +234,44 @@ export default function CourseDetailModal({
                           </button>
                         </div>
 
-                        <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.55, paddingLeft: "1.65rem" }}>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.55, paddingLeft: "1.65rem", margin: 0 }}>
                           {u.topics}
                         </p>
+
+                        {/* Custom Attached Document if exists */}
+                        {course.uploadedFiles && course.uploadedFiles[u.title] && (
+                          <div style={{
+                            margin: "0.5rem 0 0 1.65rem",
+                            padding: "0.45rem 0.75rem",
+                            background: "rgba(0, 240, 255, 0.08)",
+                            border: "1px solid rgba(0, 240, 255, 0.25)",
+                            borderRadius: "var(--radius-sm)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "0.5rem",
+                            flexWrap: "wrap"
+                          }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem" }}>
+                              <FileText size={14} color="var(--accent-primary)" />
+                              <span style={{ fontWeight: 600, color: "var(--text-primary)" }}>
+                                {course.uploadedFiles[u.title].title || course.uploadedFiles[u.title].name}
+                              </span>
+                              <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+                                ({course.uploadedFiles[u.title].size})
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-primary"
+                              onClick={() => handleDownloadCustomFile(course.uploadedFiles[u.title])}
+                              style={{ padding: "0.25rem 0.65rem", fontSize: "0.72rem", flex: "none" }}
+                            >
+                              <Download size={12} />
+                              <span>Download Document</span>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -402,6 +481,95 @@ export default function CourseDetailModal({
                       <span>Open</span>
                       <ExternalLink size={13} />
                     </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: Study Materials & Handouts (Custom Uploads & Exchanged Files) */}
+          {activeTab === "materials" && courseFiles.length > 0 && (
+            <div>
+              <div style={{ 
+                background: "var(--bg-surface-elevated)", 
+                padding: "0.85rem 1.15rem", 
+                borderRadius: "var(--radius-md)", 
+                marginBottom: "1.25rem",
+                fontSize: "0.85rem",
+                color: "var(--text-secondary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "0.75rem",
+                flexWrap: "wrap",
+                borderLeft: "3px solid var(--accent-primary)"
+              }}>
+                <div>
+                  <strong>Official Study Documents:</strong> Handouts, lecture presentations, and question banks managed by department administration.
+                </div>
+                <span className="code-badge" style={{ fontSize: "0.75rem" }}>
+                  {courseFiles.length} Available Document(s)
+                </span>
+              </div>
+
+              <div style={{ display: "grid", gap: "0.75rem" }}>
+                {courseFiles.map((f, idx) => (
+                  <div 
+                    key={f.id || idx} 
+                    className="book-card" 
+                    style={{ 
+                      margin: 0, 
+                      padding: "1rem 1.25rem", 
+                      alignItems: "center", 
+                      justifyContent: "space-between",
+                      flexWrap: "wrap",
+                      gap: "0.75rem"
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem", flex: "1 1 280px" }}>
+                      <div style={{ 
+                        width: "38px", 
+                        height: "38px", 
+                        borderRadius: "var(--radius-md)", 
+                        background: "rgba(0, 240, 255, 0.12)",
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center",
+                        color: "var(--accent-primary)",
+                        flexShrink: 0
+                      }}>
+                        <FileText size={18} />
+                      </div>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.2rem" }}>
+                          <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                            {f.title || f.name}
+                          </span>
+                          <span className="filter-pill" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem", textTransform: "uppercase", fontWeight: 700 }}>
+                            {f.category || "Notes"}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                          {f.unitName || "General Course Material"} • {f.size}
+                          {f.uploadedAt && <span> • Added: {f.uploadedAt}</span>}
+                        </div>
+                        {f.description && (
+                          <div style={{ fontSize: "0.78rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>
+                            {f.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={() => handleDownloadCustomFile(f)}
+                      style={{ flex: "none", padding: "0.5rem 0.95rem", fontSize: "0.8rem" }}
+                    >
+                      <Download size={14} />
+                      <span>Download Document</span>
+                    </button>
                   </div>
                 ))}
               </div>
