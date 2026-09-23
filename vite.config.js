@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // Ensures relative assets so it works seamlessly on GitHub Pages or local preview
+  base: '/studynest/', // Explicit base path for https://krishnajith17.github.io/studynest/
   build: {
     outDir: 'dist',
     sourcemap: false,
