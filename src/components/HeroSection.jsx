@@ -13,23 +13,29 @@ export default function HeroSection({
 }) {
   return (
     <section className="hero" id="home">
-      <div className="hero-glow-bg"></div>
+      {/* Ambient Aurora Orbs */}
+      <div className="hero-glow-bg">
+        <div className="hero-orb hero-orb-1"></div>
+        <div className="hero-orb hero-orb-2"></div>
+        <div className="hero-orb hero-orb-3"></div>
+      </div>
+
       <div className="container hero-inner">
         {/* Top pill */}
         <div className="hero-pill">
           <Sparkles size={15} />
-          <span>Curriculum 2023–2027 • Amrita Engineering</span>
+          <span>Curriculum 2023–2027 • Vivid Academic Incubator</span>
         </div>
 
         {/* Title */}
         <h1 className="hero-title">
-          Master Your Courses with <br />
-          <span className="hero-title-highlight">StudyNest Pro</span>
+          Master Your Curriculum with <br />
+          <span className="hero-title-highlight">StudyNest Chroma</span>
         </h1>
 
         {/* Subtitle */}
         <p className="hero-subtitle">
-          Search verified syllabus structures, explore accredited textbooks, and compile instant unit-wise notes, exam question banks, and reference guides.
+          Explore complete syllabus units, access accredited textbooks with 1-click links, download formatted academic notes, and calculate your SGPA in vibrant high-definition color.
         </p>
 
         {/* Search input bar */}
@@ -39,7 +45,7 @@ export default function HeroSection({
             <input 
               type="text"
               className="search-input"
-              placeholder="Search by course code, title, author, or unit topic (e.g. 23MAT124, Biomimicry, C programming)..."
+              placeholder="Search course code, title, author, or unit topic (e.g. 23MAT124, Biomimicry, C programming)..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -57,7 +63,7 @@ export default function HeroSection({
         </div>
 
         {/* Semester quick filter chips */}
-        <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+        <div className="filter-pills-row">
           <button 
             type="button" 
             className={`filter-pill ${selectedSemester === "all" ? "active" : ""}`}

@@ -36,7 +36,7 @@ export default function CourseCard({
             <span className={`category-tag ${getCategoryClass(course.category)}`}>
               {course.category}
             </span>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-dim)", fontWeight: 600 }}>
+            <span style={{ fontSize: "0.75rem", color: "var(--text-dim)", fontWeight: 700 }}>
               Sem {course.semester}
             </span>
           </div>
@@ -72,7 +72,9 @@ export default function CourseCard({
           <div className="units-container">
             <div className="units-title">
               <span>Syllabus Modules ({course.parts.length})</span>
-              <span style={{ fontSize: "0.7rem", color: "var(--accent-primary)" }}>Instant PDF</span>
+              <span style={{ fontSize: "0.7rem", color: "var(--accent-primary)", fontWeight: 700 }}>
+                Instant PDF
+              </span>
             </div>
             <div className="unit-pills-list">
               {course.parts.slice(0, 3).map((part, idx) => (
@@ -80,7 +82,7 @@ export default function CourseCard({
                   key={idx} 
                   className="unit-download-item"
                   onClick={() => onDownloadUnit(course, part)}
-                  title={`Download study material for ${part}`}
+                  title={`Download study notes for ${part}`}
                   style={{ cursor: "pointer" }}
                 >
                   <span style={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", maxWidth: "88%" }}>
@@ -98,7 +100,7 @@ export default function CourseCard({
                     color: "var(--accent-primary)", 
                     cursor: "pointer", 
                     padding: "0.2rem 0.4rem", 
-                    fontWeight: 600 
+                    fontWeight: 700 
                   }}
                   onClick={() => onOpenDetails(course)}
                 >

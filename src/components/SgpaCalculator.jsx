@@ -136,11 +136,12 @@ export default function SgpaCalculator({ courses }) {
         </div>
 
         {/* Progress Bar Visualizer */}
-        <div style={{ width: "100%", background: "var(--bg-surface-subtle)", height: "8px", borderRadius: "var(--radius-full)", overflow: "hidden" }}>
+        <div style={{ width: "100%", background: "var(--bg-surface-subtle)", height: "10px", borderRadius: "var(--radius-full)", overflow: "hidden", border: "1px solid var(--border-subtle)" }}>
           <div style={{ 
             height: "100%", 
             width: `${Math.min(100, (parseFloat(sgpa) / 10) * 100)}%`, 
-            background: `linear-gradient(90deg, #0284c7, ${classification.color})`,
+            background: "var(--brand-gradient)",
+            boxShadow: "0 0 12px var(--glow-primary)",
             transition: "width 300ms ease" 
           }} />
         </div>

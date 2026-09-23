@@ -20,10 +20,11 @@ import Footer from "./components/Footer";
 
 export default function App() {
   /* ── Persistence ── */
-  const [courses, setCourses] = useLocalStorage("amrita_eac_courses_v3", initialCourses);
-  const [bookmarks, setBookmarks] = useLocalStorage("amrita_eac_bookmarks_v3", ["23MAT124", "23ECE101", "23ECE103"]);
-  const [history, setHistory] = useLocalStorage("amrita_eac_history_v3", []);
-  const [theme, setTheme] = useLocalStorage("amrita_eac_theme_v3", "dark");
+  const [courses, setCourses] = useLocalStorage("studynest_chroma_courses", initialCourses);
+  const [bookmarks, setBookmarks] = useLocalStorage("studynest_chroma_bookmarks", ["23MAT124", "23ECE101", "23ECE103"]);
+  const [history, setHistory] = useLocalStorage("studynest_chroma_history", []);
+  const [theme, setTheme] = useLocalStorage("studynest_chroma_theme", "dark");
+  const [palette, setPalette] = useLocalStorage("studynest_chroma_palette", "aurora");
 
   /* ── UI / View Navigation ── */
   const [activeView, setActiveView] = useState("browse"); // "browse", "sgpa", "hub", "admin"
@@ -41,10 +42,11 @@ export default function App() {
   const [isDeptModalOpen, setIsDeptModalOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  /* ── Synchronize Theme with Document Root ── */
+  /* ── Synchronize Theme & Palette with Document Root ── */
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+    document.documentElement.setAttribute("data-palette", palette);
+  }, [theme, palette]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -171,6 +173,8 @@ export default function App() {
       <Navbar
         theme={theme}
         onToggleTheme={toggleTheme}
+        palette={palette}
+        onSelectPalette={setPalette}
         bookmarkCount={bookmarks.length}
         historyCount={history.length}
         onOpenBookmarks={() => setIsBookmarksOpen(true)}
@@ -259,7 +263,7 @@ export default function App() {
                   <button
                     type="button"
                     className="btn-primary"
-                    style={{ flex: "none" }}
+                    style={{ flex: "none", margin: "0 auto" }}
                     onClick={handleResetFilters}
                   >
                     Reset All Filters

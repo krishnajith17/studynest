@@ -13,12 +13,12 @@ export default function FilterBar({
   hasActiveFilters
 }) {
   return (
-    <div className="controls-bar">
+    <div className="filter-bar-container">
       {/* Category Pills */}
-      <div className="filter-group">
-        <span className="filter-label">
-          <Filter size={15} style={{ verticalAlign: "middle", marginRight: "0.25rem" }} />
-          Category:
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+        <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+          <Filter size={15} color="var(--accent-primary)" />
+          <span>Category:</span>
         </span>
         <button 
           type="button" 

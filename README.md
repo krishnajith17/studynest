@@ -1,127 +1,72 @@
-# 🎓 StudyNest Pro
+# 🌈 StudyNest Chroma (Vivid Edition)
 
-> **Academic Syllabus & Resource Incubator for Engineering Students**  
-> An elevated, modern, high-performance study portal engineered to help undergraduate engineering students explore syllabus scopes, access accredited textbooks with one-click search links, download unit-by-unit study notes as formatted PDFs, and manage bookmarks.
-
----
-
-## ✨ Features & Enhancements
-
-- 📚 **Full 11-Course Engineering Curriculum**:
-  - Complete curriculum across Semesters 1 & 2 (Mathematics, Semiconductor Physics, Nature Inspired Engineering, Computer Programming, Electrical Lab, Indian Heritage, Technical Communication, and more).
-  - Detailed course credits, Lecture-Tutorial-Practical (L-T-P) hours, and scope descriptions.
-- 📖 **Interactive Textbook & Reference Hub**:
-  - Direct 1-click links to search and purchase accredited textbooks on Google Books.
-  - Complete author citations, publication years, editions, and ISBNs.
-- ⚡ **Instant Search & Multi-Level Filtering**:
-  - Multi-attribute real-time search across course codes, titles, authors, and syllabus keywords.
-  - Filter chips for **Semester 1**, **Semester 2**, and categories (**Basic Sciences & Math**, **Core Engineering**, **Humanities & Mind**).
-  - Sorting by Course Code, Title, and Credits.
-- 📄 **Multi-Page Formatted PDF Generator**:
-  - Clean, academic-grade PDF generation with automatic pagination.
-  - Formatted tables for syllabus units, textbook bibliographies, and exam question banks.
-- 📌 **Pinned Courses (Bookmarks)**:
-  - Students can star their current semester courses for 1-click access via the Pinned Drawer.
-- ⏱️ **Download History**:
-  - Local history log of recently compiled notes with instant re-download capabilities.
-- 🌓 **Adaptive Dark & Light Mode**:
-  - Designed according to strict WCAG 4.5:1 contrast standards with smooth transitions.
-- 🔐 **Curriculum Administration Suite**:
-  - Passcode: `STUDY`
-  - Allows course additions, module management, and custom PDF file uploads attached to specific units.
-- 🚀 **Turnkey GitHub Pages Deployment**:
-  - Pre-configured `base: './'` for zero-config hosting.
-  - Automated GitHub Actions workflow included (`.github/workflows/deploy.yml`).
+> **Vivid Academic Syllabus & Resource Incubator for Engineering Students**  
+> An elevated, high-energy academic study portal engineered with **5 dynamic, vibrant color palettes**, category aura glows, and iridescent micro-interactions while retaining 100% of the accredited 11-course engineering curriculum.
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ What's New in StudyNest Chroma
 
-- **Framework**: React 19 + Vite 8
-- **Icons**: Lucide React + Custom SVG Brand Kit
-- **PDF Generation**: jsPDF
-- **Styling**: Modern CSS Design System (Custom CSS Variables, Glassmorphism, Micro-Interactions)
-- **Deployment**: GitHub Pages & GitHub Actions
+- 🎨 **5 Curated Dynamic Color Palettes** with 1-click real-time switcher:
+  1. 🌌 **Electric Aurora**: Deep Indigo/Navy + Vivid Cyber Cyan (`#00f0ff`) + Electric Violet (`#8b5cf6`) + Neon Mint (`#10b981`)
+  2. 🌅 **Sunset Radiance**: Deep Obsidian + Solar Coral (`#ff5722`) + Sunset Pink (`#ec4899`) + Golden Amber (`#f59e0b`)
+  3. ⚡ **Cyberpunk Neon**: High-contrast Onyx + Laser Rose (`#f43f5e`) + Hyper Cyan (`#06b6d4`) + Acid Lime (`#a3e635`)
+  4. 🌲 **Emerald Oasis**: Abyssal Teal + Radiant Emerald (`#10b981`) + Mint Frost (`#2dd4bf`) + Spring Green (`#84cc16`)
+  5. 🔮 **Cosmic Amethyst**: Midnight Plum (`#0d071a`) + Galactic Orchid (`#c084fc`) + Vivid Fuchsia (`#d946ef`) + Starlight Gold (`#facc15`)
+- 🌓 **Harmonized Dark & Light Modes**:
+  - Each of the 5 palettes adapts seamlessly into both a high-contrast dark mode and a crisp daylight-readable light mode.
+- 💫 **Category-Themed Aura Glows**:
+  - **Sciences & Math (SCI)**: Mint & Emerald aura glow.
+  - **Core Engineering (ENGG)**: Electric Cyan & Cobalt aura glow.
+  - **Humanities (HUM)**: Warm Coral & Sunset Amber glow.
+- 🔮 **Chromatic Card Borders & Ambient Orbs**:
+  - Floating ambient aurora orbs in the hero background.
+  - Cards feature multi-stop chromatic borders that softly illuminate upon hover.
+  - Iridescent animated gradient typography for hero headlines and metric counters.
 
 ---
 
-## 🚀 How to Upload & Deploy to GitHub
+## 📚 Complete Curriculum Included (Identical to StudyNest Pro)
 
-### Method 1: Update Your Existing `studynest` Repository (Recommended)
+- **11 Core Courses**:
+  - `23MAT124`: Mathematics for EAC 1 (Calculus & Linear Algebra)
+  - `23ECE101`: Nature Inspired Engineering (Biomimicry & Systems)
+  - `23ECE102`: Problem Solving & Algorithmic Thinking
+  - `23ECE103`: Basic Electrical & Electronics Engineering
+  - `23ECE104`: Physics of Semiconductors
+  - `23EEE104`: Electric Circuits & Simulation
+  - `23EEE184`: Electrical Engineering Laboratory
+  - `23CHY104`: Engineering Chemistry
+  - `23ENG101`: Technical Communication & Professional Fluency
+  - `23CUL101`: Cultural Education & Heritage of India
+  - `23CSE101`: Computer Programming Fundamentals
+- **All Syllabus Modules & Instant Unit-by-Unit PDF Generation**
+- **Accredited Textbooks with 1-Click Search Links**
+- **Interactive SGPA / CGPA Estimator** with weighted grading formulas
+- **Learning Hub** (circuit simulators, math graphers, NPTEL course links, viva questions)
+- **Department Framework Modal** (Vision, Mission, PEOs, PSOs)
+- **Pinned Drawer (Bookmarks)** and **Download History Log**
+- **Curriculum Admin Suite** (Passcode: `STUDY`)
 
-To replace the old version in `https://github.com/krishnajith17/studynest` with this new version:
+---
+
+## 🚀 Running StudyNest Chroma Locally
+
+From PowerShell or Terminal:
 
 ```bash
-# 1. Navigate into the studynest-pro folder
-cd "C:\Users\krish\.gemini\antigravity\scratch\studynest-pro"
+# 1. Navigate to the project
+cd "C:\Users\krish\.gemini\antigravity\scratch\studynest-chroma"
 
-# 2. Initialize git if not already initialized
-git init
+# 2. Start the dev server (runs on port 5174 so StudyNest Pro can run simultaneously on 5173)
+cmd.exe /c "npm.cmd run dev"
 
-# 3. Add all files
-git add .
-
-# 4. Commit changes
-git commit -m "feat: complete StudyNest Pro redesign with 11-course curriculum, clean UI, and PDF generator"
-
-# 5. Set branch to main
-git branch -M main
-
-# 6. Add your GitHub remote
-git remote add origin https://github.com/krishnajith17/studynest.git
-
-# 7. Push to GitHub (use --force if overwriting old commits)
-git push -u origin main --force
+# 3. Open in browser:
+# http://localhost:5174/
 ```
 
-### Method 2: Push to a New GitHub Repository
-
-If you'd prefer to create a brand new repository (e.g. `studynest-pro`):
-
-1. Go to [github.com/new](https://github.com/new) and create a new repository named `studynest-pro`.
-2. Run:
-
+To build for production or GitHub Pages:
 ```bash
-cd "C:\Users\krish\.gemini\antigravity\scratch\studynest-pro"
-git init
-git add .
-git commit -m "feat: initial commit for StudyNest Pro"
-git branch -M main
-git remote add origin https://github.com/krishnajith17/studynest-pro.git
-git push -u origin main
+cmd.exe /c "npm.cmd run build"
 ```
-
----
-
-## 🌐 Enabling GitHub Pages
-
-Once pushed, enable GitHub Pages in your repository settings:
-
-1. Go to your repository on GitHub (`https://github.com/krishnajith17/studynest` or your new repo).
-2. Click **Settings** ➔ **Pages** (in the left sidebar).
-3. Under **Build and deployment > Source**, select **GitHub Actions**.
-4. The automated workflow in `.github/workflows/deploy.yml` will automatically build and publish your site in ~60 seconds!
-
-*(Alternative: You can also choose **Deploy from a branch**, and select `gh-pages` or upload the contents of the `dist/` folder directly).*
-
----
-
-## 💻 Local Development
-
-```bash
-# Install dependencies (if setting up on a new machine)
-npm install
-
-# Start local development server
-npm run dev
-
-# Build for production
-npm run build
-```
-
----
-
-## 🔑 Admin Passcode
-
-- **Passcode**: `STUDY`
-- Click the **Admin** button in the top navigation bar to unlock the curriculum management dashboard.
+The optimized production bundle is placed in `./dist` with relative paths (`base: './'`), ready for zero-config deployment.
