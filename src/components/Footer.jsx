@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { GraduationCap, Heart, Quote, ExternalLink, Sparkles } from "lucide-react";
+import { GraduationCap, Heart, Quote, ExternalLink, Sparkles, FileDown } from "lucide-react";
 import { ACADEMIC_QUOTES } from "../data/courses";
+import { generateProjectPresentationPDF } from "../utils/pdfGenerator";
 
 export default function Footer() {
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -44,6 +45,17 @@ export default function Footer() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap", color: "var(--text-muted)", fontSize: "0.8125rem" }}>
+            <button
+              type="button"
+              onClick={generateProjectPresentationPDF}
+              className="btn-secondary"
+              style={{ padding: "0.4rem 0.85rem", fontSize: "0.78rem", color: "var(--accent-primary)", borderColor: "var(--border-card)" }}
+              title="Download full 7-page Classroom Project Presentation PDF"
+            >
+              <FileDown size={14} />
+              <span>Project Presentation PDF</span>
+            </button>
+            <span>•</span>
             <a 
               href="https://github.com/krishnajith17/studynest" 
               target="_blank" 

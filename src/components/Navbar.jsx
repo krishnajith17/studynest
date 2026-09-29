@@ -12,9 +12,11 @@ import {
   Compass,
   Award,
   BookOpen,
-  Sparkles
+  Sparkles,
+  FileDown
 } from "lucide-react";
 import ThemePalettePicker from "./ThemePalettePicker";
+import { generateProjectPresentationPDF } from "../utils/pdfGenerator";
 
 export default function Navbar({ 
   theme, 
@@ -92,6 +94,16 @@ export default function Navbar({
               >
                 <Award size={16} />
                 <span>Framework</span>
+              </button>
+              <button 
+                type="button"
+                className="nav-btn"
+                onClick={generateProjectPresentationPDF}
+                title="Download 7-Page Classroom Project Presentation PDF"
+                style={{ color: "var(--accent-primary)" }}
+              >
+                <FileDown size={16} />
+                <span>Project PDF</span>
               </button>
             </nav>
           </div>
