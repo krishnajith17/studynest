@@ -4,24 +4,25 @@ import react from '@vitejs/plugin-react';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
     {
-      name: 'html-transform-dev',
-      transformIndexHtml(html, ctx) {
-        if (ctx.server) {
+      name: 'html-entry-restore',
+      enforce: 'pre',
+      transformIndexHtml: {
+        order: 'pre',
+        handler(html) {
           return html
             .replace(
-              /<script type="module" crossorigin src=".*?assets\/index\.js"><\/script>/,
+              /<script type="module" crossorigin src=".*?assets\/index\.js(\?[^"]*)?"><\/script>/,
               '<script type="module" src="/src/main.jsx"></script>'
             )
             .replace(
-              /<link rel="stylesheet" crossorigin href=".*?assets\/index\.css">/,
+              /<link rel="stylesheet" crossorigin href=".*?assets\/index\.css(\?[^"]*)?">/g,
               ''
             );
-        }
-        return html;
+        },
       },
     },
+    react(),
   ],
   base: './',
   build: {
@@ -38,6 +39,6 @@ export default defineConfig({
   },
   server: {
     port: 5174,
-    host: true, // Allows mobile devices on the same Wi-Fi to connect
+    host: true,
   },
 });
