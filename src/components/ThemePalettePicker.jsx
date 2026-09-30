@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Palette, Check, Sparkles } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 
 export const PALETTES = [
   {
     id: "aurora",
-    name: "Electric Aurora",
-    tagline: "Cyber Cyan & Electric Violet",
-    dots: ["#00f0ff", "#8b5cf6", "#10b981"]
+    name: "Mobbin Studio",
+    tagline: "High-Contrast Ink & Electric Blue",
+    dots: ["#0065ff", "#141414", "#00f0ff"]
   },
   {
     id: "sunset",
     name: "Sunset Radiance",
-    tagline: "Solar Coral & Amber Glow",
-    dots: ["#ff5722", "#f59e0b", "#ec4899"]
+    tagline: "Flame Orange & Warm Amber",
+    dots: ["#ff540b", "#f59e0b", "#ec4899"]
   },
   {
     id: "cyberpunk",
@@ -23,14 +23,14 @@ export const PALETTES = [
   {
     id: "emerald",
     name: "Emerald Oasis",
-    tagline: "Radiant Emerald & Seafoam",
-    dots: ["#10b981", "#06b6d4", "#84cc16"]
+    tagline: "Mobbin Green & Mint Teal",
+    dots: ["#10b981", "#3ba213", "#06b6d4"]
   },
   {
     id: "amethyst",
     name: "Cosmic Amethyst",
-    tagline: "Galactic Orchid & Sun Gold",
-    dots: ["#c084fc", "#d946ef", "#facc15"]
+    tagline: "Studio Violet & Gold",
+    dots: ["#a855f7", "#d946ef", "#facc15"]
   }
 ];
 
@@ -40,7 +40,6 @@ export default function ThemePalettePicker({ currentPalette, onSelectPalette }) 
 
   const activeThemeObj = PALETTES.find(p => p.id === currentPalette) || PALETTES[0];
 
-  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -57,7 +56,7 @@ export default function ThemePalettePicker({ currentPalette, onSelectPalette }) 
         type="button" 
         className="palette-trigger-btn"
         onClick={() => setIsOpen(!isOpen)}
-        title="Change Vibrant Color Theme"
+        title="Switch Studio Accent Theme"
         aria-label="Color Palette Switcher"
       >
         <div className="palette-preview-dots">
@@ -65,11 +64,11 @@ export default function ThemePalettePicker({ currentPalette, onSelectPalette }) 
             <span 
               key={i} 
               className="palette-preview-dot" 
-              style={{ background: color, boxShadow: `0 0 6px ${color}` }}
+              style={{ background: color }}
             />
           ))}
         </div>
-        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-primary)" }}>
+        <span className="desktop-only" style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)" }}>
           {activeThemeObj.name.split(" ")[0]}
         </span>
       </button>
@@ -78,26 +77,27 @@ export default function ThemePalettePicker({ currentPalette, onSelectPalette }) 
         <div 
           style={{
             position: "absolute",
-            top: "calc(100% + 8px)",
+            top: "calc(100% + 10px)",
             right: 0,
-            width: "min(280px, calc(100vw - 24px))",
+            width: "min(275px, calc(100vw - 24px))",
             maxWidth: "92vw",
             background: "var(--bg-surface)",
             border: "1px solid var(--border-card)",
-            borderRadius: "var(--radius-lg)",
+            borderRadius: "20px",
             boxShadow: "var(--shadow-hover)",
-            padding: "0.75rem",
-            animation: "scaleUp 180ms cubic-bezier(0.16, 1, 0.3, 1)"
+            padding: "0.65rem",
+            zIndex: 250,
+            animation: "scaleUp 160ms cubic-bezier(0.16, 1, 0.3, 1)"
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.5rem 0.65rem", borderBottom: "1px solid var(--border-subtle)", marginBottom: "0.5rem" }}>
-            <Sparkles size={16} color="var(--accent-primary)" />
-            <span style={{ fontSize: "0.8125rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
-              Vibrant Color Palettes
+          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", padding: "0.35rem 0.5rem 0.55rem", borderBottom: "1px solid var(--border-subtle)", marginBottom: "0.4rem" }}>
+            <Sparkles size={14} color="var(--accent-primary)" />
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              Studio Accent Theme
             </span>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
             {PALETTES.map((palette) => {
               const isSelected = palette.id === currentPalette;
               return (
@@ -112,47 +112,47 @@ export default function ThemePalettePicker({ currentPalette, onSelectPalette }) 
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    padding: "0.55rem 0.75rem",
-                    borderRadius: "var(--radius-md)",
-                    background: isSelected ? "var(--bg-surface-subtle)" : "transparent",
+                    padding: "0.55rem 0.7rem",
+                    borderRadius: "12px",
+                    background: isSelected ? "var(--bg-surface-elevated)" : "transparent",
                     border: isSelected ? "1px solid var(--border-card)" : "1px solid transparent",
                     textAlign: "left",
                     transition: "all var(--transition-fast)"
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = "var(--bg-surface-elevated)";
+                    if (!isSelected) e.currentTarget.style.background = "var(--bg-surface-subtle)";
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) e.currentTarget.style.background = "transparent";
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                    <div style={{ display: "flex", gap: "4px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+                    <div style={{ display: "flex", gap: "3px" }}>
                       {palette.dots.map((c, idx) => (
                         <span 
                           key={idx} 
                           style={{
-                            width: "10px",
-                            height: "10px",
+                            width: "9px",
+                            height: "9px",
                             borderRadius: "50%",
                             background: c,
-                            boxShadow: `0 0 8px ${c}`
+                            border: "1px solid rgba(255,255,255,0.15)"
                           }}
                         />
                       ))}
                     </div>
                     <div>
-                      <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: isSelected ? "var(--accent-primary)" : "var(--text-primary)" }}>
+                      <div style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text-primary)" }}>
                         {palette.name}
                       </div>
-                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                      <div style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>
                         {palette.tagline}
                       </div>
                     </div>
                   </div>
 
                   {isSelected && (
-                    <Check size={16} color="var(--accent-primary)" strokeWidth={3} />
+                    <Check size={15} color="var(--accent-primary)" strokeWidth={2.5} />
                   )}
                 </button>
               );

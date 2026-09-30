@@ -117,8 +117,14 @@ export default function App() {
   }, []);
 
   const handleDownloadExecution = useCallback(
-      const customFile = (partName && course.uploadedFiles && course.uploadedFiles[partName]) ||
-        (partName && Array.isArray(course.files) && course.files.find(f => f.unitName === partName || f.title === partName));
+    (course, partName) => {
+      const customFile =
+        (partName && course.uploadedFiles && course.uploadedFiles[partName]) ||
+        (partName &&
+          Array.isArray(course.files) &&
+          course.files.find(
+            (f) => f.unitName === partName || f.title === partName
+          ));
 
       if (customFile && customFile.data) {
         const link = document.createElement("a");
@@ -139,7 +145,7 @@ export default function App() {
         courseCode: course.code,
         courseTitle: course.title,
         partName: partName || "Full Syllabus",
-        timestamp: `${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • ${now.toLocaleDateString([], { month: 'short', day: 'numeric' })}`,
+        timestamp: `${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} • ${now.toLocaleDateString([], { month: "short", day: "numeric" })}`,
       };
 
       setHistory((prev) => [historyItem, ...prev.slice(0, 30)]);

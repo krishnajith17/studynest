@@ -1,12 +1,11 @@
 import React from "react";
 import { 
-  Star, 
+  Bookmark, 
   BookOpen, 
   Download, 
-  Layers, 
-  ExternalLink,
-  ChevronRight,
-  FileText
+  ArrowUpRight,
+  FileText,
+  Paperclip
 } from "lucide-react";
 
 export default function CourseCard({ 
@@ -29,62 +28,36 @@ export default function CourseCard({
   const fileCount = (course.files?.length || 0) + Object.keys(course.uploadedFiles || {}).length;
 
   return (
-    <div className="course-card">
-      <div>
-        {/* Top Badges & Bookmark */}
+    <article className="course-card">
+      {/* Mobbin-Style Visual Showcase Stage (Top Container) */}
+      <div className="card-showcase-stage">
+        {/* Top Row: Code, Category, Semester & Bookmark */}
         <div className="card-top">
           <div className="badge-row">
             <span className="code-badge">{course.code}</span>
             <span className={`category-tag ${getCategoryClass(course.category)}`}>
               {course.category}
             </span>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-dim)", fontWeight: 700 }}>
-              Sem {course.semester}
-            </span>
+            <span className="sem-badge">Sem 0{course.semester}</span>
           </div>
 
           <button 
             type="button"
             className={`star-btn ${isBookmarked ? "starred" : ""}`}
             onClick={() => onToggleBookmark(course.code)}
-            title={isBookmarked ? "Remove from pinned courses" : "Pin this course to bookmarks"}
+            title={isBookmarked ? "Remove from saved courses" : "Save course to bookmarks"}
             aria-label={`Bookmark ${course.title}`}
           >
-            <Star size={18} fill={isBookmarked ? "currentColor" : "none"} />
+            <Bookmark size={16} fill={isBookmarked ? "currentColor" : "none"} />
           </button>
         </div>
 
-        {/* Title */}
-        <h3 className="course-title">{course.title}</h3>
-
-        {/* Credits & LTP */}
-        <div className="course-meta-chips">
-          <span><strong>{course.credits}</strong> Credits</span>
-          <span>•</span>
-          <span>L-T-P: <strong>{course.ltp}</strong></span>
-          <span>•</span>
-          <span><strong>{course.textbooks?.length || 0}</strong> Books</span>
-          {fileCount > 0 && (
-            <>
-              <span>•</span>
-              <span style={{ color: "var(--accent-primary)", fontWeight: 700 }}>
-                📎 {fileCount} File{fileCount > 1 ? "s" : ""}
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Description */}
-        <p className="course-desc">{course.description}</p>
-
-        {/* Units / Syllabus Preview */}
+        {/* Interactive Syllabus Flow Preview inside the Showcase Stage */}
         {course.parts && course.parts.length > 0 && (
           <div className="units-container">
             <div className="units-title">
-              <span>Syllabus Modules ({course.parts.length})</span>
-              <span style={{ fontSize: "0.7rem", color: "var(--accent-primary)", fontWeight: 700 }}>
-                Instant PDF
-              </span>
+              <span>Syllabus Flows ({course.parts.length})</span>
+              <span className="units-instant-tag">1-Click PDF</span>
             </div>
             <div className="unit-pills-list">
               {course.parts.slice(0, 3).map((part, idx) => (
@@ -93,56 +66,85 @@ export default function CourseCard({
                   className="unit-download-item"
                   onClick={() => onDownloadUnit(course, part)}
                   title={`Download study notes for ${part}`}
-                  style={{ cursor: "pointer" }}
                 >
-                  <span style={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", maxWidth: "88%" }}>
-                    {part}
-                  </span>
+                  <div className="unit-item-left">
+                    <span className="unit-index-pill">0{idx + 1}</span>
+                    <span className="unit-item-name">{part}</span>
+                  </div>
                   <span className="unit-dl-icon-btn">
                     <Download size={13} />
                   </span>
                 </div>
               ))}
               {course.parts.length > 3 && (
-                <div 
-                  style={{ 
-                    fontSize: "0.75rem", 
-                    color: "var(--accent-primary)", 
-                    cursor: "pointer", 
-                    padding: "0.2rem 0.4rem", 
-                    fontWeight: 700 
-                  }}
+                <button 
+                  type="button"
+                  className="units-more-btn"
                   onClick={() => onOpenDetails(course)}
                 >
-                  +{course.parts.length - 3} more modules & questions →
-                </div>
+                  <span>+{course.parts.length - 3} more modules &amp; exam bank</span>
+                  <ArrowUpRight size={13} />
+                </button>
               )}
             </div>
           </div>
         )}
       </div>
 
-      {/* Card Footer Actions */}
-      <div className="card-footer-actions">
-        <button 
-          type="button" 
-          className="btn-primary"
+      {/* Bottom Editorial Metadata & Actions */}
+      <div className="card-body-meta">
+        <h3 
+          className="course-title" 
           onClick={() => onOpenDetails(course)}
+          style={{ cursor: "pointer" }}
         >
-          <BookOpen size={16} />
-          <span>Syllabus & Books</span>
-        </button>
+          {course.title}
+        </h3>
 
-        <button 
-          type="button" 
-          className="btn-secondary"
-          onClick={() => onDownloadFull(course)}
-          title="Download Complete Course Guide (PDF)"
-          aria-label={`Download full PDF for ${course.code}`}
-        >
-          <Download size={16} />
-        </button>
+        {/* Credits, L-T-P, Books & Custom Uploaded Files */}
+        <div className="course-meta-chips">
+          <span className="meta-pill"><strong>{course.credits}</strong> Cr</span>
+          <span className="meta-dot">•</span>
+          <span className="meta-pill">L-T-P <strong>{course.ltp}</strong></span>
+          <span className="meta-dot">•</span>
+          <span className="meta-pill"><strong>{course.textbooks?.length || 0}</strong> Books</span>
+          {fileCount > 0 && (
+            <>
+              <span className="meta-dot">•</span>
+              <span className="meta-file-badge">
+                <Paperclip size={11} />
+                <span>{fileCount} File{fileCount > 1 ? "s" : ""}</span>
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* Concise Description */}
+        <p className="course-desc">{course.description}</p>
+
+        {/* Mobbin Pill Action Footer */}
+        <div className="card-footer-actions">
+          <button 
+            type="button" 
+            className="btn-primary"
+            onClick={() => onOpenDetails(course)}
+          >
+            <BookOpen size={15} />
+            <span>Explore Syllabus</span>
+            <ArrowUpRight size={15} style={{ marginLeft: "auto", opacity: 0.75 }} />
+          </button>
+
+          <button 
+            type="button" 
+            className="btn-secondary"
+            onClick={() => onDownloadFull(course)}
+            title="Download Complete Course Guide (PDF)"
+            aria-label={`Download full PDF for ${course.code}`}
+          >
+            <Download size={16} />
+          </button>
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

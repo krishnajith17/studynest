@@ -12,8 +12,8 @@ import {
   Compass,
   Award,
   BookOpen,
-  Sparkles,
-  FileDown
+  FileDown,
+  Layers
 } from "lucide-react";
 import ThemePalettePicker from "./ThemePalettePicker";
 import { generateProjectPresentationPDF } from "../utils/pdfGenerator";
@@ -36,11 +36,11 @@ export default function Navbar({
 }) {
   return (
     <>
-      {/* Top Navbar */}
+      {/* Mobbin-Style Floating Pill Navigation Bar */}
       <header className="navbar">
-        <div className="container navbar-inner">
-          {/* Brand */}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div className="navbar-pill">
+          {/* Left: Brand Identity */}
+          <div className="navbar-brand-group">
             <a 
               href="#home" 
               className="brand-logo"
@@ -49,66 +49,63 @@ export default function Navbar({
                 onNavigateView("browse");
               }}
             >
-              <div className="brand-icon-wrap">
-                <GraduationCap size={20} strokeWidth={2.4} />
+              <div className="brand-icon-wrap" aria-hidden="true">
+                <Layers size={18} strokeWidth={2.5} />
               </div>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                  <span className="brand-name">StudyNest</span>
-                  <span className="brand-badge">Vivid</span>
-                </div>
+              <div className="brand-text-wrap">
+                <span className="brand-name">StudyNest</span>
+                <span className="brand-badge">EAC</span>
               </div>
             </a>
-
-            {/* Desktop Primary View Switcher */}
-            <nav className="nav-desktop-links" style={{ marginLeft: "0.5rem" }}>
-              <button 
-                type="button"
-                className={`nav-btn ${activeView === "browse" ? "nav-btn-active" : ""}`}
-                onClick={() => onNavigateView("browse")}
-              >
-                <BookOpen size={16} />
-                <span>Curriculum</span>
-              </button>
-              <button 
-                type="button"
-                className={`nav-btn ${activeView === "sgpa" ? "nav-btn-active" : ""}`}
-                onClick={() => onNavigateView("sgpa")}
-              >
-                <Calculator size={16} />
-                <span>SGPA Calc</span>
-              </button>
-              <button 
-                type="button"
-                className={`nav-btn ${activeView === "hub" ? "nav-btn-active" : ""}`}
-                onClick={() => onNavigateView("hub")}
-              >
-                <Compass size={16} />
-                <span>Learning Hub</span>
-              </button>
-              <button 
-                type="button"
-                className="nav-btn"
-                onClick={onOpenDepartmentModal}
-                title="View EAC Vision, Mission, PEOs and POs"
-              >
-                <Award size={16} />
-                <span>Framework</span>
-              </button>
-              <button 
-                type="button"
-                className="nav-btn"
-                onClick={generateProjectPresentationPDF}
-                title="Download 7-Page Classroom Project Presentation PDF"
-                style={{ color: "var(--accent-primary)" }}
-              >
-                <FileDown size={16} />
-                <span>Project PDF</span>
-              </button>
-            </nav>
           </div>
 
-          {/* Action buttons */}
+          {/* Center: Mobbin Segmented Pill Navigation */}
+          <nav className="nav-desktop-links" aria-label="Main Navigation">
+            <button 
+              type="button"
+              className={`nav-btn ${activeView === "browse" ? "nav-btn-active" : ""}`}
+              onClick={() => onNavigateView("browse")}
+            >
+              <BookOpen size={15} />
+              <span>Courses</span>
+            </button>
+            <button 
+              type="button"
+              className={`nav-btn ${activeView === "sgpa" ? "nav-btn-active" : ""}`}
+              onClick={() => onNavigateView("sgpa")}
+            >
+              <Calculator size={15} />
+              <span>SGPA</span>
+            </button>
+            <button 
+              type="button"
+              className={`nav-btn ${activeView === "hub" ? "nav-btn-active" : ""}`}
+              onClick={() => onNavigateView("hub")}
+            >
+              <Compass size={15} />
+              <span>Learning Hub</span>
+            </button>
+            <button 
+              type="button"
+              className="nav-btn"
+              onClick={onOpenDepartmentModal}
+              title="View Amrita EAC Vision, Mission, PEOs and POs"
+            >
+              <Award size={15} />
+              <span>Framework</span>
+            </button>
+            <button 
+              type="button"
+              className="nav-btn nav-btn-accent"
+              onClick={generateProjectPresentationPDF}
+              title="Download Classroom Project Presentation PDF"
+            >
+              <FileDown size={15} />
+              <span>Deck PDF</span>
+            </button>
+          </nav>
+
+          {/* Right: Utility & Theme Controls */}
           <div className="nav-actions">
             {/* Theme Palette Switcher */}
             <ThemePalettePicker 
@@ -119,7 +116,7 @@ export default function Navbar({
             {/* Bookmarks Toggle */}
             <button 
               type="button"
-              className="nav-btn"
+              className="nav-icon-btn"
               onClick={onOpenBookmarks}
               title="Saved & Pinned Courses"
               aria-label="View bookmarked courses"
@@ -133,7 +130,7 @@ export default function Navbar({
             {/* Download History Toggle */}
             <button 
               type="button"
-              className="nav-btn"
+              className="nav-icon-btn"
               onClick={onOpenHistory}
               title="Download Logs"
               aria-label="View download history"
@@ -147,32 +144,32 @@ export default function Navbar({
             {/* Dark / Light Toggle */}
             <button 
               type="button"
-              className="nav-btn"
+              className="nav-icon-btn"
               onClick={onToggleTheme}
               title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
               aria-label="Toggle theme"
             >
-              {theme === "dark" ? <Sun size={17} color="#fbbf24" /> : <Moon size={17} color="#7c3aed" />}
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
 
             {/* Admin Control */}
             {isAdmin ? (
-              <div style={{ display: "flex", gap: "0.25rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
                 <button 
                   type="button"
                   className={`nav-btn ${activeView === "admin" ? "nav-btn-active" : ""}`}
                   onClick={() => onNavigateView("admin")}
-                  title="Curriculum Admin Dashboard"
+                  title="Curriculum & File Manager Admin Dashboard"
+                  style={{ padding: "0.4rem 0.75rem" }}
                 >
-                  <ShieldCheck size={16} color="#10b981" />
+                  <ShieldCheck size={15} color="#10b981" />
                   <span className="desktop-only">Admin</span>
                 </button>
                 <button 
                   type="button"
-                  className="nav-btn"
+                  className="nav-icon-btn"
                   onClick={onLogoutAdmin}
                   title="Exit Admin Session"
-                  style={{ padding: "0.5rem" }}
                 >
                   <LogOut size={15} />
                 </button>
@@ -180,19 +177,20 @@ export default function Navbar({
             ) : (
               <button 
                 type="button" 
-                className="nav-btn"
+                className="nav-cta-pill"
                 onClick={onOpenAdminLogin}
-                title="Admin Portal Access"
+                title="Admin Portal & File Upload/Exchange"
                 aria-label="Admin login"
               >
-                <KeyRound size={16} />
+                <KeyRound size={14} />
+                <span className="desktop-only">Admin</span>
               </button>
             )}
           </div>
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Mobile Bottom Floating Pill Dock */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
         <button 
           type="button"
@@ -201,9 +199,9 @@ export default function Navbar({
           aria-label="Courses"
         >
           <div className="mobile-nav-icon">
-            <BookOpen size={20} />
+            <BookOpen size={19} />
           </div>
-          <span>Curriculum</span>
+          <span>Courses</span>
         </button>
 
         <button 
@@ -213,7 +211,7 @@ export default function Navbar({
           aria-label="SGPA Calculator"
         >
           <div className="mobile-nav-icon">
-            <Calculator size={20} />
+            <Calculator size={19} />
           </div>
           <span>SGPA</span>
         </button>
@@ -225,7 +223,7 @@ export default function Navbar({
           aria-label="Learning Hub"
         >
           <div className="mobile-nav-icon">
-            <Compass size={20} />
+            <Compass size={19} />
           </div>
           <span>Hub</span>
         </button>
@@ -237,7 +235,7 @@ export default function Navbar({
           aria-label="Department Framework"
         >
           <div className="mobile-nav-icon">
-            <Award size={20} />
+            <Award size={19} />
           </div>
           <span>Framework</span>
         </button>

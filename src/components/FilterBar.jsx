@@ -1,5 +1,5 @@
 import React from "react";
-import { Filter, SlidersHorizontal, RotateCcw } from "lucide-react";
+import { SlidersHorizontal, RotateCcw, Sparkles } from "lucide-react";
 import { CATEGORIES } from "../data/courses";
 
 export default function FilterBar({
@@ -14,12 +14,8 @@ export default function FilterBar({
 }) {
   return (
     <div className="filter-bar-container">
-      {/* Category Pills */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-        <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-          <Filter size={15} color="var(--accent-primary)" />
-          <span>Category:</span>
-        </span>
+      {/* Left: Mobbin-Style Horizontal Category Filter Chips */}
+      <div className="filter-chips-scroll" role="tablist" aria-label="Course Categories">
         <button 
           type="button" 
           className={`filter-pill ${selectedCategory === CATEGORIES.ALL ? "active" : ""}`}
@@ -32,57 +28,56 @@ export default function FilterBar({
           className={`filter-pill ${selectedCategory === CATEGORIES.SCI ? "active" : ""}`}
           onClick={() => onSelectCategory(CATEGORIES.SCI)}
         >
-          Sciences & Math (SCI)
+          Sciences &amp; Math · SCI
         </button>
         <button 
           type="button" 
           className={`filter-pill ${selectedCategory === CATEGORIES.ENGG ? "active" : ""}`}
           onClick={() => onSelectCategory(CATEGORIES.ENGG)}
         >
-          Engineering (ENGG)
+          Engineering · ENGG
         </button>
         <button 
           type="button" 
           className={`filter-pill ${selectedCategory === CATEGORIES.HUM ? "active" : ""}`}
           onClick={() => onSelectCategory(CATEGORIES.HUM)}
         >
-          Humanities (HUM)
+          Humanities · HUM
         </button>
       </div>
 
-      {/* Right controls: Results count & Sort */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap", justifyContent: "space-between" }}>
-        <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)", fontWeight: 500 }}>
-          Showing <strong>{matchCount}</strong> of {totalCount} courses
+      {/* Right: Results Count, Sort Pill & Reset */}
+      <div className="filter-right-controls">
+        <span className="filter-count-label">
+          Showing <strong>{matchCount}</strong> of {totalCount}
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <SlidersHorizontal size={14} color="var(--text-dim)" />
+        <div className="sort-pill-wrap">
+          <SlidersHorizontal size={13} className="sort-icon" />
           <select 
             className="sort-select"
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value)}
             aria-label="Sort courses"
           >
-            <option value="code">Sort by Course Code</option>
-            <option value="title">Sort by Title (A-Z)</option>
-            <option value="credits-desc">Highest Credits First</option>
-            <option value="semester">Sort by Semester</option>
+            <option value="code">Sort: Course Code</option>
+            <option value="title">Sort: Title (A–Z)</option>
+            <option value="credits-desc">Sort: Highest Credits</option>
+            <option value="semester">Sort: Semester</option>
           </select>
-
-          {hasActiveFilters && (
-            <button 
-              type="button" 
-              className="btn-secondary"
-              style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
-              onClick={onResetFilters}
-              title="Reset all search queries and filters"
-            >
-              <RotateCcw size={13} />
-              <span>Reset</span>
-            </button>
-          )}
         </div>
+
+        {hasActiveFilters && (
+          <button 
+            type="button" 
+            className="filter-reset-pill"
+            onClick={onResetFilters}
+            title="Reset all search queries and filters"
+          >
+            <RotateCcw size={13} />
+            <span>Reset</span>
+          </button>
+        )}
       </div>
     </div>
   );
